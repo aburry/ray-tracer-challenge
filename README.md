@@ -5,4 +5,6 @@ Jamis Buck, "The ray tracer challenge : a test-driven guide to your first 3D ren
 $  elm make --optimize --output=src/main.js src/Main.elm
 
 # samples
+![info bubble](/docs/infobubble.png)
 ![book cover](/docs/cover.png)
+![utah teapot](/docs/utah-teapot.png)
