@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.a7.ap === region.bk.ap)
+	if (region.aT.ai === region.bb.ai)
 	{
-		return 'on line ' + region.a7.ap;
+		return 'on line ' + region.aT.ai;
 	}
-	return 'on lines ' + region.a7.ap + ' through ' + region.bk.ap;
+	return 'on lines ' + region.aT.ai + ' through ' + region.bb.ai;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b2,
-		impl.cd,
-		impl.cb,
+		impl.bW,
+		impl.b7,
+		impl.b5,
 		function() { return function() {} }
 	);
 });
@@ -2704,9 +2704,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		O: func(record.O),
-		a8: record.a8,
-		a5: record.a5
+		K: func(record.K),
+		aU: record.aU,
+		aR: record.aR
 	}
 });
 
@@ -2974,11 +2974,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.O;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.a8;
+		var message = !tag ? value : tag < 3 ? value.a : value.K;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aU;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.a5) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.aR) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b2,
-		impl.cd,
-		impl.cb,
+		impl.bW,
+		impl.b7,
+		impl.b5,
 		function(sendToApp, initialModel) {
-			var view = impl.ce;
+			var view = impl.b8;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b2,
-		impl.cd,
-		impl.cb,
+		impl.bW,
+		impl.b7,
+		impl.b5,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.a6 && impl.a6(sendToApp)
-			var view = impl.ce;
+			var divertHrefToApp = impl.aS && impl.aS(sendToApp)
+			var view = impl.b8;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bU);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bM);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.cc) && (_VirtualDom_doc.title = title = doc.cc);
+				(title !== doc.b6) && (_VirtualDom_doc.title = title = doc.b6);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.b7;
-	var onUrlRequest = impl.b8;
+	var onUrlChange = impl.b0;
+	var onUrlRequest = impl.b1;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		a6: function(sendToApp)
+		aS: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.bE === next.bE
-							&& curr.bq === next.bq
-							&& curr.bA.a === next.bA.a
+							&& curr.bx === next.bx
+							&& curr.bh === next.bh
+							&& curr.bt.a === next.bt.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		b2: function(flags)
+		bW: function(flags)
 		{
-			return A3(impl.b2, flags, _Browser_getUrl(), key);
+			return A3(impl.bW, flags, _Browser_getUrl(), key);
 		},
-		ce: impl.ce,
-		cd: impl.cd,
-		cb: impl.cb
+		b8: impl.b8,
+		b7: impl.b7,
+		b5: impl.b5
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { b0: 'hidden', bV: 'visibilitychange' }
+		? { bU: 'hidden', bN: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { b0: 'mozHidden', bV: 'mozvisibilitychange' }
+		? { bU: 'mozHidden', bN: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { b0: 'msHidden', bV: 'msvisibilitychange' }
+		? { bU: 'msHidden', bN: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { b0: 'webkitHidden', bV: 'webkitvisibilitychange' }
-		: { b0: 'hidden', bV: 'visibilitychange' };
+		? { bU: 'webkitHidden', bN: 'webkitvisibilitychange' }
+		: { bU: 'hidden', bN: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		bK: _Browser_getScene(),
-		bR: {
-			t: _Browser_window.pageXOffset,
-			u: _Browser_window.pageYOffset,
-			cf: _Browser_doc.documentElement.clientWidth,
-			b$: _Browser_doc.documentElement.clientHeight
+		bD: _Browser_getScene(),
+		bJ: {
+			a1: _Browser_window.pageXOffset,
+			a2: _Browser_window.pageYOffset,
+			b9: _Browser_doc.documentElement.clientWidth,
+			bT: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		cf: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		b$: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		b9: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		bT: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			bK: {
-				cf: node.scrollWidth,
-				b$: node.scrollHeight
+			bD: {
+				b9: node.scrollWidth,
+				bT: node.scrollHeight
 			},
-			bR: {
-				t: node.scrollLeft,
-				u: node.scrollTop,
-				cf: node.clientWidth,
-				b$: node.clientHeight
+			bJ: {
+				a1: node.scrollLeft,
+				a2: node.scrollTop,
+				b9: node.clientWidth,
+				bT: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			bK: _Browser_getScene(),
-			bR: {
-				t: x,
-				u: y,
-				cf: _Browser_doc.documentElement.clientWidth,
-				b$: _Browser_doc.documentElement.clientHeight
+			bD: _Browser_getScene(),
+			bJ: {
+				a1: x,
+				a2: y,
+				b9: _Browser_doc.documentElement.clientWidth,
+				bT: _Browser_doc.documentElement.clientHeight
 			},
-			bZ: {
-				t: x + rect.left,
-				u: y + rect.top,
-				cf: rect.width,
-				b$: rect.height
+			bR: {
+				a1: x + rect.left,
+				a2: y + rect.top,
+				b9: rect.width,
+				bT: rect.height
 			}
 		};
 	});
@@ -4355,6 +4355,173 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
+
+// STRINGS
+
+
+var _Parser_isSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var smallLength = smallString.length;
+	var isGood = offset + smallLength <= bigString.length;
+
+	for (var i = 0; isGood && i < smallLength; )
+	{
+		var code = bigString.charCodeAt(offset);
+		isGood =
+			smallString[i++] === bigString[offset++]
+			&& (
+				code === 0x000A /* \n */
+					? ( row++, col=1 )
+					: ( col++, (code & 0xF800) === 0xD800 ? smallString[i++] === bigString[offset++] : 1 )
+			)
+	}
+
+	return _Utils_Tuple3(isGood ? offset : -1, row, col);
+});
+
+
+
+// CHARS
+
+
+var _Parser_isSubChar = F3(function(predicate, offset, string)
+{
+	return (
+		string.length <= offset
+			? -1
+			:
+		(string.charCodeAt(offset) & 0xF800) === 0xD800
+			? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)
+			:
+		(predicate(_Utils_chr(string[offset]))
+			? ((string[offset] === '\n') ? -2 : (offset + 1))
+			: -1
+		)
+	);
+});
+
+
+var _Parser_isAsciiCode = F3(function(code, offset, string)
+{
+	return string.charCodeAt(offset) === code;
+});
+
+
+
+// NUMBERS
+
+
+var _Parser_chompBase10 = F2(function(offset, string)
+{
+	for (; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (code < 0x30 || 0x39 < code)
+		{
+			return offset;
+		}
+	}
+	return offset;
+});
+
+
+var _Parser_consumeBase = F3(function(base, offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var digit = string.charCodeAt(offset) - 0x30;
+		if (digit < 0 || base <= digit) break;
+		total = base * total + digit;
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+var _Parser_consumeBase16 = F2(function(offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (0x30 <= code && code <= 0x39)
+		{
+			total = 16 * total + code - 0x30;
+		}
+		else if (0x41 <= code && code <= 0x46)
+		{
+			total = 16 * total + code - 55;
+		}
+		else if (0x61 <= code && code <= 0x66)
+		{
+			total = 16 * total + code - 87;
+		}
+		else
+		{
+			break;
+		}
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+
+// FIND STRING
+
+
+var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var newOffset = bigString.indexOf(smallString, offset);
+	var target = newOffset < 0 ? bigString.length : newOffset + smallString.length;
+
+	while (offset < target)
+	{
+		var code = bigString.charCodeAt(offset++);
+		code === 0x000A /* \n */
+			? ( col=1, row++ )
+			: ( col++, (code & 0xF800) === 0xD800 && offset++ )
+	}
+
+	return _Utils_Tuple3(newOffset, row, col);
+});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -4435,6 +4602,675 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$GT = 2;
 var $elm$core$Basics$LT = 0;
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
+var $author$project$RayTracerChallenge$CSG = F4(
+	function (a, b, c, d) {
+		return {$: 1, a: a, b: b, c: c, d: d};
+	});
+var $author$project$RayTracerChallenge$Empty = {$: 3};
+var $author$project$RayTracerChallenge$Group = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $author$project$RayTracerChallenge$Primitive = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var $elm$core$Basics$append = _Utils_append;
+var $author$project$RayTracerDsl$applyTransform = F2(
+	function (transform, assembly) {
+		switch (assembly.$) {
+			case 3:
+				return $author$project$RayTracerChallenge$Empty;
+			case 2:
+				var transformList = assembly.a;
+				var shape = assembly.b;
+				return A2(
+					$author$project$RayTracerChallenge$Primitive,
+					_Utils_ap(
+						transformList,
+						_List_fromArray(
+							[transform])),
+					shape);
+			case 1:
+				var transformList = assembly.a;
+				var op = assembly.b;
+				var left = assembly.c;
+				var right = assembly.d;
+				return A4(
+					$author$project$RayTracerChallenge$CSG,
+					_Utils_ap(
+						transformList,
+						_List_fromArray(
+							[transform])),
+					op,
+					left,
+					right);
+			default:
+				var transformList = assembly.a;
+				var list = assembly.b;
+				return A2(
+					$author$project$RayTracerChallenge$Group,
+					_Utils_ap(
+						transformList,
+						_List_fromArray(
+							[transform])),
+					list);
+		}
+	});
+var $author$project$Geometry$Matrix = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return {$: 0, a: a, b: b, c: c, d: d, e: e, f: f, g: g, h: h, i: i, j: j, k: k, l: l, m: m, n: n, o: o, p: p};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var $author$project$Geometry$matNewScale = F3(
+	function (sx, sy, sz) {
+		return $author$project$Geometry$Matrix(sx)(0)(0)(0)(0)(sy)(0)(0)(0)(0)(sz)(0)(0)(0)(0)(1);
+	});
+var $author$project$RayTracerDsl$scale = F3(
+	function (x, y, z) {
+		return $author$project$RayTracerDsl$applyTransform(
+			A3($author$project$Geometry$matNewScale, x, y, z));
+	});
+var $author$project$Geometry$Sphere = {$: 1};
+var $elm$core$Basics$True = 0;
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
+var $author$project$RayTracerChallenge$defaultMaterial = {
+	r: 0.3,
+	k: $elm$core$Basics$always(
+		{j: 0.9, l: 0.9, n: 0.9}),
+	s: 0.9,
+	u: 0,
+	C: 1,
+	D: true,
+	P: 200,
+	E: 0.9,
+	A: 0
+};
+var $author$project$Geometry$matNewIdentity = $author$project$Geometry$Matrix(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(1);
+var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Basics$and = _Basics_and;
+var $elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Basics$gt = _Utils_gt;
+var $elm$core$List$reverse = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
+};
+var $elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							$elm$core$List$foldl,
+							fn,
+							acc,
+							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var $elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$core$Basics$eq = _Utils_equal;
+var $elm$core$Basics$fdiv = _Basics_fdiv;
+var $elm$core$Basics$le = _Utils_le;
+var $elm$core$Basics$lt = _Utils_lt;
+var $elm$core$Basics$mul = _Basics_mul;
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Geometry$Point = F3(
+	function (a, b, c) {
+		return {$: 0, a: a, b: b, c: c};
+	});
+var $author$project$Geometry$pntAlongRay = F2(
+	function (_v0, t) {
+		var _v1 = _v0.a;
+		var x = _v1.a;
+		var y = _v1.b;
+		var z = _v1.c;
+		var _v2 = _v0.b;
+		var dx = _v2.a;
+		var dy = _v2.b;
+		var dz = _v2.c;
+		return A3($author$project$Geometry$Point, x + (t * dx), y + (t * dy), z + (t * dz));
+	});
+var $elm$core$Basics$sqrt = _Basics_sqrt;
+var $elm$core$Basics$sub = _Basics_sub;
+var $author$project$Geometry$intersectCone = F2(
+	function (config, ray) {
+		var _v0 = ray.a;
+		var x = _v0.a;
+		var y = _v0.b;
+		var z = _v0.c;
+		var _v1 = ray.b;
+		var dx = _v1.a;
+		var dy = _v1.b;
+		var dz = _v1.c;
+		var sides = function () {
+			var ts = function () {
+				var _v5 = _Utils_Tuple3(((dx * dx) - (dy * dy)) + (dz * dz), (((2 * x) * dx) - ((2 * y) * dy)) + ((2 * z) * dz), ((x * x) - (y * y)) + (z * z));
+				var a = _v5.a;
+				var b = _v5.b;
+				var c = _v5.c;
+				var discriminant = (b * b) - ((4 * a) * c);
+				return (0 < a) ? _List_fromArray(
+					[
+						((-b) - $elm$core$Basics$sqrt(discriminant)) / (2 * a),
+						((-b) + $elm$core$Basics$sqrt(discriminant)) / (2 * a)
+					]) : (((!a) && (!(!b))) ? _List_fromArray(
+					[(-c) / (2 * b)]) : _List_Nil);
+			}();
+			var intersect = function (t) {
+				var _v4 = A2($author$project$Geometry$pntAlongRay, ray, t);
+				var iy = _v4.b;
+				return ((_Utils_cmp(config.aa, iy) < 0) && (_Utils_cmp(iy, config._) < 0)) ? _List_fromArray(
+					[t]) : _List_Nil;
+			};
+			return A2($elm$core$List$concatMap, intersect, ts);
+		}();
+		var _v2 = function () {
+			var intersect = function (yend) {
+				var t = (yend - y) / dy;
+				var distanceSq = function () {
+					var _v3 = A2($author$project$Geometry$pntAlongRay, ray, t);
+					var ix = _v3.a;
+					var iy = _v3.b;
+					var iz = _v3.c;
+					return _Utils_cmp((ix * ix) + (iz * iz), iy * iy) < 1;
+				}();
+				return distanceSq ? _List_fromArray(
+					[t]) : _List_Nil;
+			};
+			return _Utils_Tuple2(
+				intersect(config.aa),
+				intersect(config._));
+		}();
+		var cap0 = _v2.a;
+		var cap1 = _v2.b;
+		return $elm$core$List$concat(
+			config.a5 ? _List_fromArray(
+				[sides, cap0, cap1]) : _List_fromArray(
+				[sides]));
+	});
+var $elm$core$Basics$max = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) > 0) ? x : y;
+	});
+var $elm$core$Basics$min = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) < 0) ? x : y;
+	});
+var $author$project$Geometry$intersectCube = function (_v0) {
+	var _v1 = _v0.a;
+	var x = _v1.a;
+	var y = _v1.b;
+	var z = _v1.c;
+	var _v2 = _v0.b;
+	var dx = _v2.a;
+	var dy = _v2.b;
+	var dz = _v2.c;
+	var pick = F2(
+		function (_v4, _v5) {
+			var a = _v4.a;
+			var b = _v4.b;
+			var c = _v5.a;
+			var d = _v5.b;
+			return _Utils_Tuple2(
+				A2($elm$core$Basics$max, a, c),
+				A2($elm$core$Basics$min, b, d));
+		});
+	var intersect = F2(
+		function (v, dv) {
+			return (0 <= dv) ? _Utils_Tuple2((-(v + 1)) / dv, (-(v - 1)) / dv) : _Utils_Tuple2((-(v - 1)) / dv, (-(v + 1)) / dv);
+		});
+	var _v3 = A2(
+		pick,
+		A2(intersect, z, dz),
+		A2(
+			pick,
+			A2(intersect, y, dy),
+			A2(intersect, x, dx)));
+	var tmin = _v3.a;
+	var tmax = _v3.b;
+	return (_Utils_cmp(tmin, tmax) < 1) ? _List_fromArray(
+		[tmin, tmax]) : _List_Nil;
+};
+var $author$project$Geometry$quadraticRoots = F3(
+	function (a, b, c) {
+		var d = $elm$core$Basics$sqrt((b * b) - ((4 * a) * c));
+		return (0 < b) ? _Utils_Tuple2((2 * c) / ((-b) - d), ((-b) - d) / (2 * a)) : _Utils_Tuple2(((-b) + d) / (2 * a), (2 * c) / ((-b) + d));
+	});
+var $author$project$Geometry$intersectCylinder = F2(
+	function (config, ray) {
+		var _v0 = ray.a;
+		var x = _v0.a;
+		var y = _v0.b;
+		var z = _v0.c;
+		var _v1 = ray.b;
+		var dx = _v1.a;
+		var dy = _v1.b;
+		var dz = _v1.c;
+		var _v2 = function () {
+			var _v3 = _Utils_Tuple3((dx * dx) + (dz * dz), ((2 * x) * dx) + ((2 * z) * dz), ((x * x) + (z * z)) - 1);
+			var a = _v3.a;
+			var b = _v3.b;
+			var c = _v3.c;
+			var _v4 = A3($author$project$Geometry$quadraticRoots, a, b, c);
+			var r1 = _v4.a;
+			var r2 = _v4.b;
+			return _Utils_Tuple2(
+				A2($elm$core$Basics$min, r1, r2),
+				A2($elm$core$Basics$max, r1, r2));
+		}();
+		var tmin = _v2.a;
+		var tmax = _v2.b;
+		var _v5 = function () {
+			var intersect = function (t) {
+				var _v6 = A2($author$project$Geometry$pntAlongRay, ray, t);
+				var iy = _v6.b;
+				return ((_Utils_cmp(config.aa, iy) < 0) && (_Utils_cmp(iy, config._) < 0)) ? _List_fromArray(
+					[t]) : _List_Nil;
+			};
+			return _Utils_Tuple2(
+				intersect(tmin),
+				intersect(tmax));
+		}();
+		var side0 = _v5.a;
+		var side1 = _v5.b;
+		var _v7 = function () {
+			var intersect = function (yend) {
+				var t = (yend - y) / dy;
+				var distanceSq = function () {
+					var _v8 = A2($author$project$Geometry$pntAlongRay, ray, t);
+					var ix = _v8.a;
+					var iz = _v8.c;
+					return ((ix * ix) + (iz * iz)) <= 1;
+				}();
+				return distanceSq ? _List_fromArray(
+					[t]) : _List_Nil;
+			};
+			return _Utils_Tuple2(
+				intersect(config.aa),
+				intersect(config._));
+		}();
+		var cap0 = _v7.a;
+		var cap1 = _v7.b;
+		return $elm$core$List$concat(
+			config.a5 ? _List_fromArray(
+				[side0, side1, cap0, cap1]) : _List_fromArray(
+				[side0, side1]));
+	});
+var $author$project$Geometry$intersectPlane = function (_v0) {
+	var _v1 = _v0.a;
+	var y = _v1.b;
+	var _v2 = _v0.b;
+	var dy = _v2.b;
+	return _List_fromArray(
+		[(-y) / dy]);
+};
+var $author$project$Geometry$Vector = F3(
+	function (a, b, c) {
+		return {$: 0, a: a, b: b, c: c};
+	});
+var $author$project$Geometry$vecBetweenPoints = F2(
+	function (_v0, _v1) {
+		var x0 = _v0.a;
+		var y0 = _v0.b;
+		var z0 = _v0.c;
+		var x1 = _v1.a;
+		var y1 = _v1.b;
+		var z1 = _v1.c;
+		return A3($author$project$Geometry$Vector, x1 - x0, y1 - y0, z1 - z0);
+	});
+var $author$project$Geometry$vecDot = F2(
+	function (_v0, _v1) {
+		var dx0 = _v0.a;
+		var dy0 = _v0.b;
+		var dz0 = _v0.c;
+		var dx1 = _v1.a;
+		var dy1 = _v1.b;
+		var dz1 = _v1.c;
+		return ((dx0 * dx1) + (dy0 * dy1)) + (dz0 * dz1);
+	});
+var $author$project$Geometry$intersectSphere = function (_v0) {
+	var rpoint = _v0.a;
+	var vector = _v0.b;
+	var s = A2(
+		$author$project$Geometry$vecBetweenPoints,
+		A3($author$project$Geometry$Point, 0, 0, 0),
+		rpoint);
+	var _v1 = _Utils_Tuple3(
+		A2($author$project$Geometry$vecDot, vector, vector),
+		2 * A2($author$project$Geometry$vecDot, vector, s),
+		A2($author$project$Geometry$vecDot, s, s) - 1);
+	var a = _v1.a;
+	var b = _v1.b;
+	var c = _v1.c;
+	var _v2 = A3($author$project$Geometry$quadraticRoots, a, b, c);
+	var r1 = _v2.a;
+	var r2 = _v2.b;
+	return _List_fromArray(
+		[
+			A2($elm$core$Basics$min, r1, r2),
+			A2($elm$core$Basics$max, r1, r2)
+		]);
+};
+var $author$project$Geometry$vecCross = F2(
+	function (_v0, _v1) {
+		var dx0 = _v0.a;
+		var dy0 = _v0.b;
+		var dz0 = _v0.c;
+		var dx1 = _v1.a;
+		var dy1 = _v1.b;
+		var dz1 = _v1.c;
+		return A3($author$project$Geometry$Vector, (dy0 * dz1) - (dz0 * dy1), (dz0 * dx1) - (dx0 * dz1), (dx0 * dy1) - (dy0 * dx1));
+	});
+var $author$project$Geometry$intersectTriangle = F2(
+	function (config, _v0) {
+		var rpoint = _v0.a;
+		var vector = _v0.b;
+		var scalarTripleProduct = F3(
+			function (v1, v2, v3) {
+				return A2(
+					$author$project$Geometry$vecDot,
+					A2($author$project$Geometry$vecCross, v1, v2),
+					v3);
+			});
+		var _v1 = _Utils_Tuple3(
+			A2($author$project$Geometry$vecBetweenPoints, config.G, config.av),
+			A2($author$project$Geometry$vecBetweenPoints, config.G, config.aw),
+			A2($author$project$Geometry$vecBetweenPoints, config.G, rpoint));
+		var e1 = _v1.a;
+		var e2 = _v1.b;
+		var e3 = _v1.c;
+		var determinant = A3(scalarTripleProduct, vector, e2, e1);
+		var _v2 = _Utils_Tuple3(
+			A3(scalarTripleProduct, e3, e1, e2) / determinant,
+			A3(scalarTripleProduct, vector, e2, e3) / determinant,
+			A3(scalarTripleProduct, e3, e1, vector) / determinant);
+		var t = _v2.a;
+		var u = _v2.b;
+		var v = _v2.c;
+		return ((0 <= u) && ((u <= 1) && ((0 <= v) && (_Utils_cmp(v, 1 - u) < 1)))) ? _List_fromArray(
+			[t]) : _List_Nil;
+	});
+var $author$project$Geometry$vectorConeNormalAt = F2(
+	function (config, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var z = _v0.c;
+		var sgn = function (n) {
+			return (0 <= n) ? 1 : (-1);
+		};
+		var distanceSq = _Utils_cmp((x * x) + (z * z), y * y) < 1;
+		return (distanceSq && (_Utils_cmp(config._, y) < 1)) ? A3($author$project$Geometry$Vector, 0, 1, 0) : ((distanceSq && (_Utils_cmp(y, config.aa) < 1)) ? A3($author$project$Geometry$Vector, 0, -1, 0) : A3(
+			$author$project$Geometry$Vector,
+			x,
+			sgn(-y) * $elm$core$Basics$sqrt((x * x) + (z * z)),
+			z));
+	});
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $author$project$Geometry$vectorCubeNormalAt = function (_v0) {
+	var x = _v0.a;
+	var y = _v0.b;
+	var z = _v0.c;
+	return ((_Utils_cmp(
+		$elm$core$Basics$abs(y),
+		$elm$core$Basics$abs(x)) < 0) && (_Utils_cmp(
+		$elm$core$Basics$abs(z),
+		$elm$core$Basics$abs(x)) < 0)) ? A3($author$project$Geometry$Vector, 1, 0, 0) : ((_Utils_cmp(
+		$elm$core$Basics$abs(z),
+		$elm$core$Basics$abs(y)) < 0) ? A3($author$project$Geometry$Vector, 0, 1, 0) : A3($author$project$Geometry$Vector, 0, 0, 1));
+};
+var $author$project$Geometry$vectorCylinderNormalAt = F2(
+	function (config, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		var z = _v0.c;
+		var epsilon = 1.0e-6;
+		var distanceSq = ((x * x) + (z * z)) < 1;
+		return (distanceSq && (_Utils_cmp(config._ - epsilon, y) < 1)) ? A3($author$project$Geometry$Vector, 0, 1, 0) : ((distanceSq && (_Utils_cmp(y, config.aa + epsilon) < 1)) ? A3($author$project$Geometry$Vector, 0, -1, 0) : A3($author$project$Geometry$Vector, x, 0, z));
+	});
+var $author$project$Geometry$vectorPlaneNormalAt = function (_v0) {
+	return A3($author$project$Geometry$Vector, 0, 1, 0);
+};
+var $author$project$Geometry$vecLength = function (v) {
+	return $elm$core$Basics$sqrt(
+		A2($author$project$Geometry$vecDot, v, v));
+};
+var $author$project$Geometry$vecScaleBy = F2(
+	function (s, _v0) {
+		var dx = _v0.a;
+		var dy = _v0.b;
+		var dz = _v0.c;
+		return A3($author$project$Geometry$Vector, s * dx, s * dy, s * dz);
+	});
+var $author$project$Geometry$vecSubtract = F2(
+	function (_v0, _v1) {
+		var dx0 = _v0.a;
+		var dy0 = _v0.b;
+		var dz0 = _v0.c;
+		var dx1 = _v1.a;
+		var dy1 = _v1.b;
+		var dz1 = _v1.c;
+		return A3($author$project$Geometry$Vector, dx0 - dx1, dy0 - dy1, dz0 - dz1);
+	});
+var $author$project$Geometry$vectorSmoothTriangleNormalAt = F2(
+	function (config, rpoint) {
+		var _v0 = _Utils_Tuple3(
+			A2($author$project$Geometry$vecBetweenPoints, config.G, config.av),
+			A2($author$project$Geometry$vecBetweenPoints, config.G, config.aw),
+			A2($author$project$Geometry$vecBetweenPoints, config.G, rpoint));
+		var e1 = _v0.a;
+		var e2 = _v0.b;
+		var e3 = _v0.c;
+		var area = $author$project$Geometry$vecLength(
+			A2($author$project$Geometry$vecCross, e1, e2));
+		var _v1 = _Utils_Tuple2(
+			$author$project$Geometry$vecLength(
+				A2($author$project$Geometry$vecCross, e2, e3)) / area,
+			$author$project$Geometry$vecLength(
+				A2($author$project$Geometry$vecCross, e1, e3)) / area);
+		var u = _v1.a;
+		var v = _v1.b;
+		return A2(
+			$author$project$Geometry$vecSubtract,
+			A2($author$project$Geometry$vecScaleBy, (1 - u) - v, config.bY),
+			A2(
+				$author$project$Geometry$vecSubtract,
+				A2($author$project$Geometry$vecScaleBy, -v, config.b$),
+				A2($author$project$Geometry$vecScaleBy, u, config.b_)));
+	});
+var $author$project$Geometry$vectorSphereNormalAt = function (_v0) {
+	var x = _v0.a;
+	var y = _v0.b;
+	var z = _v0.c;
+	return A3($author$project$Geometry$Vector, x, y, z);
+};
+var $author$project$Geometry$vectorTriangleNormalAt = F2(
+	function (config, _v0) {
+		var e2 = A2($author$project$Geometry$vecBetweenPoints, config.G, config.aw);
+		var e1 = A2($author$project$Geometry$vecBetweenPoints, config.G, config.av);
+		return A2($author$project$Geometry$vecCross, e2, e1);
+	});
+var $author$project$Geometry$shpNewShape = function (shapeConfig) {
+	var newObject = F2(
+		function (normalFn, intersectFn) {
+			return {a8: shapeConfig, bl: intersectFn, bp: normalFn};
+		});
+	switch (shapeConfig.$) {
+		case 1:
+			return A2(newObject, $author$project$Geometry$vectorSphereNormalAt, $author$project$Geometry$intersectSphere);
+		case 0:
+			return A2(newObject, $author$project$Geometry$vectorPlaneNormalAt, $author$project$Geometry$intersectPlane);
+		case 2:
+			return A2(newObject, $author$project$Geometry$vectorCubeNormalAt, $author$project$Geometry$intersectCube);
+		case 3:
+			var config = shapeConfig.a;
+			return A2(
+				newObject,
+				$author$project$Geometry$vectorCylinderNormalAt(config),
+				$author$project$Geometry$intersectCylinder(config));
+		case 4:
+			var config = shapeConfig.a;
+			return A2(
+				newObject,
+				$author$project$Geometry$vectorConeNormalAt(config),
+				$author$project$Geometry$intersectCone(config));
+		case 5:
+			var config = shapeConfig.a;
+			return A2(
+				newObject,
+				$author$project$Geometry$vectorTriangleNormalAt(config),
+				$author$project$Geometry$intersectTriangle(config));
+		default:
+			var config = shapeConfig.a;
+			return A2(
+				newObject,
+				$author$project$Geometry$vectorSmoothTriangleNormalAt(config),
+				$author$project$Geometry$intersectTriangle(config));
+	}
+};
+var $author$project$RayTracerDsl$sphere = A4(
+	$author$project$RayTracerDsl$scale,
+	0.5,
+	0.5,
+	0.5,
+	A2(
+		$author$project$RayTracerChallenge$Primitive,
+		_List_Nil,
+		{
+			S: $author$project$Geometry$shpNewShape($author$project$Geometry$Sphere),
+			J: 0,
+			m: $author$project$RayTracerChallenge$defaultMaterial,
+			W: $author$project$Geometry$matNewIdentity
+		}));
+var $author$project$Main$basic = A4($author$project$RayTracerDsl$scale, 20, 20, 20, $author$project$RayTracerDsl$sphere);
 var $elm$core$Result$Err = function (a) {
 	return {$: 1, a: a};
 };
@@ -4457,14 +5293,11 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 2, a: a};
 };
 var $elm$core$Basics$False = 1;
-var $elm$core$Basics$add = _Basics_add;
 var $elm$core$Maybe$Just = function (a) {
 	return {$: 0, a: a};
 };
 var $elm$core$Maybe$Nothing = {$: 1};
 var $elm$core$String$all = _String_all;
-var $elm$core$Basics$and = _Basics_and;
-var $elm$core$Basics$append = _Utils_append;
 var $elm$json$Json$Encode$encode = _Json_encode;
 var $elm$core$String$fromInt = _String_fromNumber;
 var $elm$core$String$join = F2(
@@ -4485,25 +5318,6 @@ var $elm$json$Json$Decode$indent = function (str) {
 		'\n    ',
 		A2($elm$core$String$split, '\n', str));
 };
-var $elm$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			if (!list.b) {
-				return acc;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				var $temp$func = func,
-					$temp$acc = A2(func, x, acc),
-					$temp$list = xs;
-				func = $temp$func;
-				acc = $temp$acc;
-				list = $temp$list;
-				continue foldl;
-			}
-		}
-	});
 var $elm$core$List$length = function (xs) {
 	return A3(
 		$elm$core$List$foldl,
@@ -4515,8 +5329,6 @@ var $elm$core$List$length = function (xs) {
 		xs);
 };
 var $elm$core$List$map2 = _List_map2;
-var $elm$core$Basics$le = _Utils_le;
-var $elm$core$Basics$sub = _Basics_sub;
 var $elm$core$List$rangeHelp = F3(
 	function (lo, hi, list) {
 		rangeHelp:
@@ -4568,9 +5380,6 @@ var $elm$core$Char$isDigit = function (_char) {
 };
 var $elm$core$Char$isAlphaNum = function (_char) {
 	return $elm$core$Char$isLower(_char) || ($elm$core$Char$isUpper(_char) || $elm$core$Char$isDigit(_char));
-};
-var $elm$core$List$reverse = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
 };
 var $elm$core$String$uncons = _String_uncons;
 var $elm$json$Json$Decode$errorOneOf = F2(
@@ -4683,7 +5492,6 @@ var $elm$core$Array$Array_elm_builtin = F4(
 	});
 var $elm$core$Elm$JsArray$empty = _JsArray_empty;
 var $elm$core$Basics$ceiling = _Basics_ceiling;
-var $elm$core$Basics$fdiv = _Basics_fdiv;
 var $elm$core$Basics$logBase = F2(
 	function (base, number) {
 		return _Basics_log(number) / _Basics_log(base);
@@ -4700,19 +5508,8 @@ var $elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
 	});
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
-var $elm$core$Basics$eq = _Utils_equal;
 var $elm$core$Basics$floor = _Basics_floor;
 var $elm$core$Elm$JsArray$length = _JsArray_length;
-var $elm$core$Basics$gt = _Utils_gt;
-var $elm$core$Basics$max = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) > 0) ? x : y;
-	});
-var $elm$core$Basics$mul = _Basics_mul;
 var $elm$core$Array$SubTree = function (a) {
 	return {$: 0, a: a};
 };
@@ -4761,29 +5558,28 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.g) {
+		if (!builder.f) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i),
+				$elm$core$Elm$JsArray$length(builder.h),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.i);
+				builder.h);
 		} else {
-			var treeLen = builder.g * $elm$core$Array$branchFactor;
+			var treeLen = builder.f * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.k) : builder.k;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.g);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.i) : builder.i;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.f);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.h) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.i);
+				builder.h);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
-var $elm$core$Basics$lt = _Utils_lt;
 var $elm$core$Array$initializeHelp = F5(
 	function (fn, fromIndex, len, nodeList, tail) {
 		initializeHelp:
@@ -4792,7 +5588,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{k: nodeList, g: (len / $elm$core$Array$branchFactor) | 0, i: tail});
+					{i: nodeList, f: (len / $elm$core$Array$branchFactor) | 0, h: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -4822,7 +5618,6 @@ var $elm$core$Array$initialize = F2(
 			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
 		}
 	});
-var $elm$core$Basics$True = 0;
 var $elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -4830,6 +5625,269 @@ var $elm$core$Result$isOk = function (result) {
 		return false;
 	}
 };
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $author$project$Geometry$Cube = {$: 2};
+var $author$project$RayTracerDsl$cube = A4(
+	$author$project$RayTracerDsl$scale,
+	0.5,
+	0.5,
+	0.5,
+	A2(
+		$author$project$RayTracerChallenge$Primitive,
+		_List_Nil,
+		{
+			S: $author$project$Geometry$shpNewShape($author$project$Geometry$Cube),
+			J: 0,
+			m: $author$project$RayTracerChallenge$defaultMaterial,
+			W: $author$project$Geometry$matNewIdentity
+		}));
+var $author$project$Geometry$Cylinder = function (a) {
+	return {$: 3, a: a};
+};
+var $author$project$RayTracerDsl$cylinder = A4(
+	$author$project$RayTracerDsl$scale,
+	0.5,
+	0.5,
+	0.5,
+	A2(
+		$author$project$RayTracerChallenge$Primitive,
+		_List_Nil,
+		{
+			S: $author$project$Geometry$shpNewShape(
+				$author$project$Geometry$Cylinder(
+					{a5: true, _: 1, aa: -1})),
+			J: 0,
+			m: $author$project$RayTracerChallenge$defaultMaterial,
+			W: $author$project$Geometry$matNewIdentity
+		}));
+var $author$project$RayTracerDsl$group = $author$project$RayTracerChallenge$Group(_List_Nil);
+var $author$project$RayTracerChallenge$applyMaterial = F2(
+	function (material, assembly) {
+		switch (assembly.$) {
+			case 3:
+				return $author$project$RayTracerChallenge$Empty;
+			case 2:
+				var transform = assembly.a;
+				var shape = assembly.b;
+				return A2(
+					$author$project$RayTracerChallenge$Primitive,
+					transform,
+					_Utils_update(
+						shape,
+						{m: material}));
+			case 1:
+				var transform = assembly.a;
+				var op = assembly.b;
+				var left = assembly.c;
+				var right = assembly.d;
+				return A4(
+					$author$project$RayTracerChallenge$CSG,
+					transform,
+					op,
+					A2($author$project$RayTracerChallenge$applyMaterial, material, left),
+					A2($author$project$RayTracerChallenge$applyMaterial, material, right));
+			default:
+				var transform = assembly.a;
+				var list = assembly.b;
+				return A2(
+					$author$project$RayTracerChallenge$Group,
+					transform,
+					A2(
+						$elm$core$List$map,
+						$author$project$RayTracerChallenge$applyMaterial(material),
+						list));
+		}
+	});
+var $author$project$RayTracerDsl$material = $author$project$RayTracerChallenge$applyMaterial;
+var $author$project$RayTracerChallenge$Difference = 2;
+var $author$project$RayTracerDsl$subtract = F2(
+	function (a1, a2) {
+		return A4($author$project$RayTracerChallenge$CSG, _List_Nil, 2, a2, a1);
+	});
+var $author$project$Geometry$matNewTranslate = F3(
+	function (x, y, z) {
+		return $author$project$Geometry$Matrix(1)(0)(0)(x)(0)(1)(0)(y)(0)(0)(1)(z)(0)(0)(0)(1);
+	});
+var $author$project$RayTracerDsl$translate = F3(
+	function (x, y, z) {
+		return $author$project$RayTracerDsl$applyTransform(
+			A3($author$project$Geometry$matNewTranslate, x, y, z));
+	});
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
+	});
+var $author$project$RayTracerDsl$pairs = F2(
+	function (xs, ys) {
+		return A2(
+			$elm$core$List$concatMap,
+			function (fn) {
+				return A2($elm$core$List$map, fn, ys);
+			},
+			A2($elm$core$List$map, $elm$core$Tuple$pair, xs));
+	});
+var $author$project$RayTracerDsl$triples = F3(
+	function (xs, ys, zs) {
+		return A2(
+			$elm$core$List$concatMap,
+			function (_v0) {
+				var x = _v0.a;
+				var y = _v0.b;
+				return A2(
+					$elm$core$List$map,
+					function (z) {
+						return _Utils_Tuple3(x, y, z);
+					},
+					zs);
+			},
+			A2($author$project$RayTracerDsl$pairs, xs, ys));
+	});
+var $author$project$RayTracerChallenge$Union = 0;
+var $author$project$RayTracerDsl$csgFromList = function (op) {
+	return function (assembly) {
+		if (!assembly.b) {
+			return $author$project$RayTracerChallenge$Empty;
+		} else {
+			var x = assembly.a;
+			var xs = assembly.b;
+			return A3(
+				$elm$core$List$foldl,
+				A2($author$project$RayTracerChallenge$CSG, _List_Nil, op),
+				x,
+				xs);
+		}
+	};
+};
+var $author$project$RayTracerDsl$union = $author$project$RayTracerDsl$csgFromList(0);
+var $author$project$Main$brick = A2(
+	$author$project$RayTracerDsl$material,
+	{
+		r: 0.3,
+		k: $elm$core$Basics$always(
+			{j: 0.32, l: 0.3, n: 0.3}),
+		s: 0.8,
+		u: 0.6,
+		C: 1.5,
+		D: false,
+		P: 100,
+		E: 0.3,
+		A: 0.8
+	},
+	A2(
+		$author$project$RayTracerDsl$subtract,
+		$author$project$RayTracerDsl$group(
+			A2(
+				$elm$core$List$map,
+				function (_v3) {
+					var x = _v3.a;
+					var y = _v3.b;
+					var z = _v3.c;
+					return A4(
+						$author$project$RayTracerDsl$translate,
+						x,
+						y,
+						z,
+						A4($author$project$RayTracerDsl$scale, 2.6, 2, 2.6, $author$project$RayTracerDsl$cylinder));
+				},
+				A3(
+					$author$project$RayTracerDsl$triples,
+					_List_fromArray(
+						[-12, -4, 4, 12]),
+					_List_fromArray(
+						[4.6]),
+					_List_fromArray(
+						[4, -4])))),
+		$author$project$RayTracerDsl$union(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$RayTracerDsl$subtract,
+					A4(
+						$author$project$RayTracerDsl$translate,
+						0,
+						-1,
+						0,
+						A4($author$project$RayTracerDsl$scale, 29.4, 9.6, 13.4, $author$project$RayTracerDsl$cube)),
+					A4($author$project$RayTracerDsl$scale, 31.8, 9.6, 15.8, $author$project$RayTracerDsl$cube)),
+					$author$project$RayTracerDsl$group(
+					A2(
+						$elm$core$List$map,
+						function (_v0) {
+							var x = _v0.a;
+							var y = _v0.b;
+							var z = _v0.c;
+							return A4(
+								$author$project$RayTracerDsl$translate,
+								x,
+								y,
+								z,
+								A4($author$project$RayTracerDsl$scale, 0.6, 8.6, 0.6, $author$project$RayTracerDsl$cube));
+						},
+						_Utils_ap(
+							A3(
+								$author$project$RayTracerDsl$triples,
+								_List_fromArray(
+									[-12, -4, 4, 12]),
+								_List_fromArray(
+									[-0.5]),
+								_List_fromArray(
+									[6.7, -6.7])),
+							A3(
+								$author$project$RayTracerDsl$triples,
+								_List_fromArray(
+									[-14.7, 14.7]),
+								_List_fromArray(
+									[-0.5]),
+								_List_fromArray(
+									[4, -4]))))),
+					$author$project$RayTracerDsl$group(
+					A2(
+						$elm$core$List$map,
+						function (_v1) {
+							var x = _v1.a;
+							var y = _v1.b;
+							var z = _v1.c;
+							return A4(
+								$author$project$RayTracerDsl$translate,
+								x,
+								y,
+								z,
+								A2(
+									$author$project$RayTracerDsl$subtract,
+									A4($author$project$RayTracerDsl$scale, 4.8, 8.8, 4.8, $author$project$RayTracerDsl$cylinder),
+									A4($author$project$RayTracerDsl$scale, 6.51, 8.6, 6.51, $author$project$RayTracerDsl$cylinder)));
+						},
+						A3(
+							$author$project$RayTracerDsl$triples,
+							_List_fromArray(
+								[-8, 0, 8]),
+							_List_fromArray(
+								[-0.5]),
+							_List_fromArray(
+								[0])))),
+					$author$project$RayTracerDsl$group(
+					A2(
+						$elm$core$List$map,
+						function (_v2) {
+							var x = _v2.a;
+							var y = _v2.b;
+							var z = _v2.c;
+							return A4(
+								$author$project$RayTracerDsl$translate,
+								x,
+								y,
+								z,
+								A4($author$project$RayTracerDsl$scale, 4.8, 2, 4.8, $author$project$RayTracerDsl$cylinder));
+						},
+						A3(
+							$author$project$RayTracerDsl$triples,
+							_List_fromArray(
+								[-12, -4, 4, 12]),
+							_List_fromArray(
+								[5.6]),
+							_List_fromArray(
+								[4, -4]))))
+				]))));
 var $elm$json$Json$Decode$map = _Json_map1;
 var $elm$json$Json$Decode$map2 = _Json_map2;
 var $elm$json$Json$Decode$succeed = _Json_succeed;
@@ -4849,243 +5907,73 @@ var $elm$html$Html$canvas = _VirtualDom_node('canvas');
 var $elm$core$Basics$identity = function (x) {
 	return x;
 };
-var $author$project$RayTracerChallenge$Point = $elm$core$Basics$identity;
-var $author$project$RayTracerChallenge$Vector = $elm$core$Basics$identity;
-var $elm$core$Basics$always = F2(
-	function (a, _v0) {
-		return a;
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(0),
+				entries));
 	});
-var $elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							$elm$core$List$foldl,
-							fn,
-							acc,
-							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
+var $elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v0, obj) {
+					var k = _v0.a;
+					var v = _v0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(0),
+			pairs));
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$cmdRender = _Platform_outgoingPort(
+	'cmdRender',
+	function ($) {
+		return $elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'elementId',
+					$elm$json$Json$Encode$string($.ba)),
+					_Utils_Tuple2(
+					'image',
+					function ($) {
+						return $elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'data',
+									$elm$json$Json$Encode$list(
+										function ($) {
+											var a = $.a;
+											var b = $.b;
+											var c = $.c;
+											return A2(
+												$elm$json$Json$Encode$list,
+												$elm$core$Basics$identity,
+												_List_fromArray(
+													[
+														$elm$json$Json$Encode$int(a),
+														$elm$json$Json$Encode$int(b),
+														$elm$json$Json$Encode$int(c)
+													]));
+										})($.bP)),
+									_Utils_Tuple2(
+									'height',
+									$elm$json$Json$Encode$int($.bT)),
+									_Utils_Tuple2(
+									'width',
+									$elm$json$Json$Encode$int($.b9))
+								]));
+					}($.bi))
+				]));
 	});
-var $elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $author$project$RayTracerChallenge$colourWhite = {K: 1, N: 1, T: 1};
-var $author$project$RayTracerChallenge$Cube = 2;
-var $author$project$RayTracerChallenge$defaultMaterial = {
-	I: 0.1,
-	o: $elm$core$Basics$always(
-		{K: 0.9, N: 0.9, T: 0.9}),
-	L: 0.9,
-	U: 0,
-	_: 1,
-	bM: true,
-	ae: 200,
-	aa: 0.9,
-	ab: 0
-};
-var $elm$core$Basics$min = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) < 0) ? x : y;
-	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $author$project$RayTracerChallenge$intersectCube = function (ray) {
-	var pick = F2(
-		function (_v2, _v3) {
-			var a = _v2.a;
-			var b = _v2.b;
-			var c = _v3.a;
-			var d = _v3.b;
-			return _Utils_Tuple2(
-				A2($elm$core$Basics$max, a, c),
-				A2($elm$core$Basics$min, b, d));
-		});
-	var intersect = F2(
-		function (v, dv) {
-			return (0 <= dv) ? _Utils_Tuple2((-(v + 1)) / dv, (-(v - 1)) / dv) : _Utils_Tuple2((-(v - 1)) / dv, (-(v + 1)) / dv);
-		});
-	var _v0 = function () {
-		var _v1 = _Utils_Tuple2(ray.at, ray.l);
-		var x = _v1.a.t;
-		var y = _v1.a.u;
-		var z = _v1.a.v;
-		var dx = _v1.b.az;
-		var dy = _v1.b.aA;
-		var dz = _v1.b.aB;
-		return A2(
-			pick,
-			A2(intersect, z, dz),
-			A2(
-				pick,
-				A2(intersect, y, dy),
-				A2(intersect, x, dx)));
-	}();
-	var tmin = _v0.a;
-	var tmax = _v0.b;
-	return (_Utils_cmp(tmin, tmax) < 1) ? _List_fromArray(
-		[tmin, tmax]) : _List_Nil;
-};
-var $author$project$RayTracerChallenge$Transform = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return function (m) {
-													return function (n) {
-														return function (o) {
-															return function (p) {
-																return {$: 0, a: a, b: b, c: c, d: d, e: e, f: f, g: g, h: h, i: i, j: j, k: k, l: l, m: m, n: n, o: o, p: p};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var $author$project$RayTracerChallenge$transformIdentity = $author$project$RayTracerChallenge$Transform(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(1)(0)(0)(0)(0)(1);
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $author$project$RayTracerChallenge$vectorCubeNormalAt = function (_v0) {
-	var x = _v0.t;
-	var y = _v0.u;
-	var z = _v0.v;
-	return ((_Utils_cmp(
-		$elm$core$Basics$abs(y),
-		$elm$core$Basics$abs(x)) < 0) && (_Utils_cmp(
-		$elm$core$Basics$abs(z),
-		$elm$core$Basics$abs(x)) < 0)) ? {az: x, aA: 0, aB: 0} : ((_Utils_cmp(
-		$elm$core$Basics$abs(z),
-		$elm$core$Basics$abs(y)) < 0) ? {az: 0, aA: y, aB: 0} : {az: 0, aA: 0, aB: z});
-};
-var $author$project$RayTracerChallenge$defaultCube = {p: 0, ao: $author$project$RayTracerChallenge$intersectCube, f: $author$project$RayTracerChallenge$defaultMaterial, aq: $author$project$RayTracerChallenge$vectorCubeNormalAt, V: 2, j: $author$project$RayTracerChallenge$transformIdentity};
-var $author$project$RayTracerChallenge$Plane = 0;
-var $author$project$RayTracerChallenge$intersectPlane = function (ray) {
-	var _v0 = _Utils_Tuple2(ray.at, ray.l);
-	var y = _v0.a.u;
-	var dy = _v0.b.aA;
-	return _List_fromArray(
-		[(-y) / dy]);
-};
-var $author$project$RayTracerChallenge$vectorPlaneNormalAt = function (_v0) {
-	return {az: 0, aA: 1, aB: 0};
-};
-var $author$project$RayTracerChallenge$defaultPlane = {p: 0, ao: $author$project$RayTracerChallenge$intersectPlane, f: $author$project$RayTracerChallenge$defaultMaterial, aq: $author$project$RayTracerChallenge$vectorPlaneNormalAt, V: 0, j: $author$project$RayTracerChallenge$transformIdentity};
-var $author$project$RayTracerChallenge$Sphere = 1;
-var $author$project$RayTracerChallenge$defaultPoint = {t: 0, u: 0, v: 0};
-var $elm$core$Basics$sqrt = _Basics_sqrt;
-var $author$project$RayTracerChallenge$vectorBetweenPoints = F2(
-	function (_v0, _v1) {
-		var from = _v0;
-		var to = _v1;
-		return {az: to.t - from.t, aA: to.u - from.u, aB: to.v - from.v};
-	});
-var $author$project$RayTracerChallenge$vectorDot = F2(
-	function (_v0, _v1) {
-		var a = _v0;
-		var b = _v1;
-		return ((a.az * b.az) + (a.aA * b.aA)) + (a.aB * b.aB);
-	});
-var $author$project$RayTracerChallenge$intersectSphere = function (ray) {
-	var s = A2($author$project$RayTracerChallenge$vectorBetweenPoints, $author$project$RayTracerChallenge$defaultPoint, ray.at);
-	var c = A2($author$project$RayTracerChallenge$vectorDot, s, s) - 1;
-	var b = 2 * A2($author$project$RayTracerChallenge$vectorDot, ray.l, s);
-	var a = A2($author$project$RayTracerChallenge$vectorDot, ray.l, ray.l);
-	var discriminant = (b * b) - ((4 * a) * c);
-	return _List_fromArray(
-		[
-			((-b) - $elm$core$Basics$sqrt(discriminant)) / (2 * a),
-			((-b) + $elm$core$Basics$sqrt(discriminant)) / (2 * a)
-		]);
-};
-var $author$project$RayTracerChallenge$vectorSphereNormalAt = function (_v0) {
-	var x = _v0.t;
-	var y = _v0.u;
-	var z = _v0.v;
-	return {az: x, aA: y, aB: z};
-};
-var $author$project$RayTracerChallenge$defaultSphere = {p: 0, ao: $author$project$RayTracerChallenge$intersectSphere, f: $author$project$RayTracerChallenge$defaultMaterial, aq: $author$project$RayTracerChallenge$vectorSphereNormalAt, V: 1, j: $author$project$RayTracerChallenge$transformIdentity};
-var $elm$core$Basics$tan = _Basics_tan;
-var $author$project$RayTracerChallenge$cameraFOV = function (camera) {
-	var halfView = $elm$core$Basics$tan(camera.aC / 2);
-	var aspect = camera.aD / camera.aE;
-	var _v0 = (1 <= aspect) ? _Utils_Tuple2(halfView, halfView / aspect) : _Utils_Tuple2(halfView * aspect, halfView);
-	var halfWidth = _v0.a;
-	var halfHeight = _v0.b;
-	var offsetHeight = halfHeight - (halfWidth / camera.aD);
-	var offsetWidth = halfWidth - (halfWidth / camera.aD);
-	var pixelSize = 2 * (halfWidth / camera.aD);
-	return _Utils_update(
-		camera,
-		{aL: offsetHeight, aM: offsetWidth, as: pixelSize});
-};
-var $author$project$RayTracerChallenge$transformInverse = function (_v0) {
+var $author$project$Geometry$matInvert = function (_v0) {
 	var j11 = _v0.a;
 	var j12 = _v0.b;
 	var j13 = _v0.c;
@@ -5102,12 +5990,12 @@ var $author$project$RayTracerChallenge$transformInverse = function (_v0) {
 	var j42 = _v0.n;
 	var j43 = _v0.o;
 	var j44 = _v0.p;
-	var det22 = {aT: (j21 * j32) - (j22 * j31), aU: (j21 * j33) - (j23 * j31), aV: (j21 * j34) - (j24 * j31), aW: (j21 * j42) - (j22 * j41), aX: (j21 * j43) - (j23 * j41), aY: (j21 * j44) - (j24 * j41), aZ: (j22 * j33) - (j23 * j32), a_: (j22 * j34) - (j24 * j32), a$: (j22 * j43) - (j23 * j42), a0: (j22 * j44) - (j24 * j42), a1: (j23 * j34) - (j24 * j33), a2: (j23 * j44) - (j24 * j43), ai: (j31 * j42) - (j32 * j41), aj: (j31 * j43) - (j33 * j41), ak: (j31 * j44) - (j34 * j41), al: (j32 * j43) - (j33 * j42), am: (j32 * j44) - (j34 * j42), an: (j33 * j44) - (j34 * j43)};
-	var term = {a9: ((j22 * det22.an) - (j23 * det22.am)) + (j24 * det22.al), ba: ((j21 * det22.an) - (j23 * det22.ak)) + (j24 * det22.aj), bb: ((j21 * det22.am) - (j22 * det22.ak)) + (j24 * det22.ai), bc: ((j21 * det22.al) - (j22 * det22.aj)) + (j23 * det22.ai)};
-	var determinant = (((j11 * term.a9) - (j12 * term.ba)) + (j13 * term.bb)) - (j14 * term.bc);
-	return $author$project$RayTracerChallenge$Transform(term.a9 / determinant)((((j12 * det22.an) - (j13 * det22.am)) + (j14 * det22.al)) / (-determinant))((((j12 * det22.a2) - (j13 * det22.a0)) + (j14 * det22.a$)) / determinant)((((j12 * det22.a1) - (j13 * det22.a_)) + (j14 * det22.aZ)) / (-determinant))(term.ba / (-determinant))((((j11 * det22.an) - (j13 * det22.ak)) + (j14 * det22.aj)) / determinant)((((j11 * det22.a2) - (j13 * det22.aY)) + (j14 * det22.aX)) / (-determinant))((((j11 * det22.a1) - (j13 * det22.aV)) + (j14 * det22.aU)) / determinant)(term.bb / determinant)((((j11 * det22.am) - (j12 * det22.ak)) + (j14 * det22.ai)) / (-determinant))((((j11 * det22.a0) - (j12 * det22.aY)) + (j14 * det22.aW)) / determinant)((((j11 * det22.a_) - (j12 * det22.aV)) + (j14 * det22.aT)) / (-determinant))(term.bc / (-determinant))((((j11 * det22.al) - (j12 * det22.aj)) + (j13 * det22.ai)) / determinant)((((j11 * det22.a$) - (j12 * det22.aX)) + (j13 * det22.aW)) / (-determinant))((((j11 * det22.aZ) - (j12 * det22.aU)) + (j13 * det22.aT)) / determinant);
+	var det22 = {ay: (j21 * j32) - (j22 * j31), az: (j21 * j33) - (j23 * j31), aA: (j21 * j34) - (j24 * j31), aB: (j21 * j42) - (j22 * j41), aC: (j21 * j43) - (j23 * j41), aD: (j21 * j44) - (j24 * j41), aE: (j22 * j33) - (j23 * j32), aF: (j22 * j34) - (j24 * j32), aG: (j22 * j43) - (j23 * j42), aH: (j22 * j44) - (j24 * j42), aI: (j23 * j34) - (j24 * j33), aJ: (j23 * j44) - (j24 * j43), ac: (j31 * j42) - (j32 * j41), ad: (j31 * j43) - (j33 * j41), ae: (j31 * j44) - (j34 * j41), af: (j32 * j43) - (j33 * j42), ag: (j32 * j44) - (j34 * j42), ah: (j33 * j44) - (j34 * j43)};
+	var term = {aV: ((j22 * det22.ah) - (j23 * det22.ag)) + (j24 * det22.af), aW: ((j21 * det22.ah) - (j23 * det22.ae)) + (j24 * det22.ad), aX: ((j21 * det22.ag) - (j22 * det22.ae)) + (j24 * det22.ac), aY: ((j21 * det22.af) - (j22 * det22.ad)) + (j23 * det22.ac)};
+	var determinant = (((j11 * term.aV) - (j12 * term.aW)) + (j13 * term.aX)) - (j14 * term.aY);
+	return $author$project$Geometry$Matrix(term.aV / determinant)((((j12 * det22.ah) - (j13 * det22.ag)) + (j14 * det22.af)) / (-determinant))((((j12 * det22.aJ) - (j13 * det22.aH)) + (j14 * det22.aG)) / determinant)((((j12 * det22.aI) - (j13 * det22.aF)) + (j14 * det22.aE)) / (-determinant))(term.aW / (-determinant))((((j11 * det22.ah) - (j13 * det22.ae)) + (j14 * det22.ad)) / determinant)((((j11 * det22.aJ) - (j13 * det22.aD)) + (j14 * det22.aC)) / (-determinant))((((j11 * det22.aI) - (j13 * det22.aA)) + (j14 * det22.az)) / determinant)(term.aX / determinant)((((j11 * det22.ag) - (j12 * det22.ae)) + (j14 * det22.ac)) / (-determinant))((((j11 * det22.aH) - (j12 * det22.aD)) + (j14 * det22.aB)) / determinant)((((j11 * det22.aF) - (j12 * det22.aA)) + (j14 * det22.ay)) / (-determinant))(term.aY / (-determinant))((((j11 * det22.af) - (j12 * det22.ad)) + (j13 * det22.ac)) / determinant)((((j11 * det22.aG) - (j12 * det22.aC)) + (j13 * det22.aB)) / (-determinant))((((j11 * det22.aE) - (j12 * det22.az)) + (j13 * det22.ay)) / determinant);
 };
-var $author$project$RayTracerChallenge$transformMul = F2(
+var $author$project$Geometry$matProduct = F2(
 	function (_v0, _v1) {
 		var a11 = _v0.a;
 		var a12 = _v0.b;
@@ -5141,351 +6029,454 @@ var $author$project$RayTracerChallenge$transformMul = F2(
 		var b42 = _v1.n;
 		var b43 = _v1.o;
 		var b44 = _v1.p;
-		return $author$project$RayTracerChallenge$Transform((((a14 * b41) + (a13 * b31)) + (a12 * b21)) + (a11 * b11))((((a14 * b42) + (a13 * b32)) + (a12 * b22)) + (a11 * b12))((((a14 * b43) + (a13 * b33)) + (a12 * b23)) + (a11 * b13))((((a14 * b44) + (a13 * b34)) + (a12 * b24)) + (a11 * b14))((((a24 * b41) + (a23 * b31)) + (a22 * b21)) + (a21 * b11))((((a24 * b42) + (a23 * b32)) + (a22 * b22)) + (a21 * b12))((((a24 * b43) + (a23 * b33)) + (a22 * b23)) + (a21 * b13))((((a24 * b44) + (a23 * b34)) + (a22 * b24)) + (a21 * b14))((((a34 * b41) + (a33 * b31)) + (a32 * b21)) + (a31 * b11))((((a34 * b42) + (a33 * b32)) + (a32 * b22)) + (a31 * b12))((((a34 * b43) + (a33 * b33)) + (a32 * b23)) + (a31 * b13))((((a34 * b44) + (a33 * b34)) + (a32 * b24)) + (a31 * b14))((((a44 * b41) + (a43 * b31)) + (a42 * b21)) + (a41 * b11))((((a44 * b42) + (a43 * b32)) + (a42 * b22)) + (a41 * b12))((((a44 * b43) + (a43 * b33)) + (a42 * b23)) + (a41 * b13))((((a44 * b44) + (a43 * b34)) + (a42 * b24)) + (a41 * b14));
+		return $author$project$Geometry$Matrix((((a14 * b41) + (a13 * b31)) + (a12 * b21)) + (a11 * b11))((((a14 * b42) + (a13 * b32)) + (a12 * b22)) + (a11 * b12))((((a14 * b43) + (a13 * b33)) + (a12 * b23)) + (a11 * b13))((((a14 * b44) + (a13 * b34)) + (a12 * b24)) + (a11 * b14))((((a24 * b41) + (a23 * b31)) + (a22 * b21)) + (a21 * b11))((((a24 * b42) + (a23 * b32)) + (a22 * b22)) + (a21 * b12))((((a24 * b43) + (a23 * b33)) + (a22 * b23)) + (a21 * b13))((((a24 * b44) + (a23 * b34)) + (a22 * b24)) + (a21 * b14))((((a34 * b41) + (a33 * b31)) + (a32 * b21)) + (a31 * b11))((((a34 * b42) + (a33 * b32)) + (a32 * b22)) + (a31 * b12))((((a34 * b43) + (a33 * b33)) + (a32 * b23)) + (a31 * b13))((((a34 * b44) + (a33 * b34)) + (a32 * b24)) + (a31 * b14))((((a44 * b41) + (a43 * b31)) + (a42 * b21)) + (a41 * b11))((((a44 * b42) + (a43 * b32)) + (a42 * b22)) + (a41 * b12))((((a44 * b43) + (a43 * b33)) + (a42 * b23)) + (a41 * b13))((((a44 * b44) + (a43 * b34)) + (a42 * b24)) + (a41 * b14));
 	});
-var $author$project$RayTracerChallenge$transformTranslate = F3(
-	function (x, y, z) {
-		return $author$project$RayTracerChallenge$Transform(1)(0)(0)(x)(0)(1)(0)(y)(0)(0)(1)(z)(0)(0)(0)(1);
-	});
-var $author$project$RayTracerChallenge$vectorCross = F2(
-	function (_v0, _v1) {
-		var a = _v0;
-		var b = _v1;
-		return {az: (a.aA * b.aB) - (a.aB * b.aA), aA: (a.aB * b.az) - (a.az * b.aB), aB: (a.az * b.aA) - (a.aA * b.az)};
-	});
-var $author$project$RayTracerChallenge$vectorMagnitude = function (v) {
-	return $elm$core$Basics$sqrt(
-		A2($author$project$RayTracerChallenge$vectorDot, v, v));
+var $elm$core$Basics$tan = _Basics_tan;
+var $author$project$Geometry$vecUnit = function (vector) {
+	return A2(
+		$author$project$Geometry$vecScaleBy,
+		1 / $author$project$Geometry$vecLength(vector),
+		vector);
 };
-var $author$project$RayTracerChallenge$vectorScaleBy = F2(
-	function (s, _v0) {
-		var dx = _v0.az;
-		var dy = _v0.aA;
-		var dz = _v0.aB;
-		return {az: s * dx, aA: s * dy, aB: s * dz};
-	});
-var $author$project$RayTracerChallenge$vectorNormalize = function (v) {
-	var _v0 = A2(
-		$author$project$RayTracerChallenge$vectorScaleBy,
-		1 / $author$project$RayTracerChallenge$vectorMagnitude(v),
-		v);
-	var vec = _v0;
-	return vec;
-};
-var $author$project$RayTracerChallenge$cameraViewTransform = F3(
-	function (_v0, to, up) {
-		var from = _v0;
-		var orientation = F3(
-			function (_v1, _v2, _v3) {
-				var l = _v1;
-				var u = _v2;
-				var f = _v3;
-				return $author$project$RayTracerChallenge$Transform(l.az)(l.aA)(l.aB)(0)(u.az)(u.aA)(u.aB)(0)(-f.az)(-f.aA)(-f.aB)(0)(0)(0)(0)(1);
-			});
-		var forward = $author$project$RayTracerChallenge$vectorNormalize(
-			A2($author$project$RayTracerChallenge$vectorBetweenPoints, from, to));
-		var left = A2(
-			$author$project$RayTracerChallenge$vectorCross,
-			forward,
-			$author$project$RayTracerChallenge$vectorNormalize(up));
-		var trueUp = A2($author$project$RayTracerChallenge$vectorCross, left, forward);
-		return $author$project$RayTracerChallenge$transformInverse(
-			A2(
-				$author$project$RayTracerChallenge$transformMul,
-				A3(orientation, left, trueUp, forward),
-				A3($author$project$RayTracerChallenge$transformTranslate, -from.t, -from.u, -from.v)));
-	});
-var $author$project$RayTracerChallenge$makeCamera = function (config) {
-	return $author$project$RayTracerChallenge$cameraFOV(
+var $author$project$RayTracerChallenge$newCamera = function (config) {
+	var cameraViewTransform = F3(
+		function (from, to, upApprox) {
+			var orientation = F3(
+				function (_v2, _v3, _v4) {
+					var lx = _v2.a;
+					var ly = _v2.b;
+					var lz = _v2.c;
+					var ux = _v3.a;
+					var uy = _v3.b;
+					var uz = _v3.c;
+					var fx = _v4.a;
+					var fy = _v4.b;
+					var fz = _v4.c;
+					return $author$project$Geometry$Matrix(lx)(ly)(lz)(0)(ux)(uy)(uz)(0)(-fx)(-fy)(-fz)(0)(0)(0)(0)(1);
+				});
+			var forward = $author$project$Geometry$vecUnit(
+				A2($author$project$Geometry$vecBetweenPoints, from, to));
+			var left = $author$project$Geometry$vecUnit(
+				A2($author$project$Geometry$vecCross, forward, upApprox));
+			var up = $author$project$Geometry$vecUnit(
+				A2($author$project$Geometry$vecCross, left, forward));
+			var _v1 = from;
+			var fromx = _v1.a;
+			var fromy = _v1.b;
+			var fromz = _v1.c;
+			return $author$project$Geometry$matInvert(
+				A2(
+					$author$project$Geometry$matProduct,
+					A3(orientation, left, up, forward),
+					A3($author$project$Geometry$matNewTranslate, -fromx, -fromy, -fromz)));
+		});
+	var cameraFOV = function (camera) {
+		var halfView = $elm$core$Basics$tan(camera.aK / 2);
+		var aspect = camera.aL / camera.aM;
+		var _v0 = (1 <= aspect) ? _Utils_Tuple2(halfView, halfView / aspect) : _Utils_Tuple2(halfView * aspect, halfView);
+		var halfWidth = _v0.a;
+		var halfHeight = _v0.b;
+		var offsetHeight = halfHeight - (halfWidth / camera.aL);
+		var offsetWidth = halfWidth - (halfWidth / camera.aL);
+		var pixelSize = 2 * (halfWidth / camera.aL);
+		return _Utils_update(
+			camera,
+			{aq: offsetHeight, ar: offsetWidth, ak: pixelSize});
+	};
+	return cameraFOV(
 		{
-			aC: config.aC,
-			aD: config.aD,
-			aE: config.aE,
-			aH: config.aH,
-			aL: 0,
-			aM: 0,
-			as: 0,
-			bd: A3($author$project$RayTracerChallenge$cameraViewTransform, config.aP, config.aQ, config.aR)
+			aK: config.aK,
+			aL: config.aL,
+			aM: config.aM,
+			aO: config.aO,
+			aq: 0,
+			ar: 0,
+			ak: 0,
+			a$: A3(cameraViewTransform, config.aZ, config.a_, config.a0)
 		});
 };
+var $author$project$RayTracerDsl$camera = $author$project$RayTracerChallenge$newCamera;
 var $elm$core$Basics$pi = _Basics_pi;
+var $author$project$Geometry$Plane = {$: 0};
+var $author$project$RayTracerDsl$plane = A2(
+	$author$project$RayTracerChallenge$Primitive,
+	_List_Nil,
+	{
+		S: $author$project$Geometry$shpNewShape($author$project$Geometry$Plane),
+		J: 0,
+		m: $author$project$RayTracerChallenge$defaultMaterial,
+		W: $author$project$Geometry$matNewIdentity
+	});
 var $elm$core$Basics$cos = _Basics_cos;
 var $elm$core$Basics$sin = _Basics_sin;
-var $author$project$RayTracerChallenge$transformRotateX = function (radians) {
-	return $author$project$RayTracerChallenge$Transform(1)(0)(0)(0)(0)(
+var $author$project$Geometry$matNewRotateX = function (radians) {
+	return $author$project$Geometry$Matrix(1)(0)(0)(0)(0)(
 		$elm$core$Basics$cos(radians))(
 		-$elm$core$Basics$sin(radians))(0)(0)(
 		$elm$core$Basics$sin(radians))(
 		$elm$core$Basics$cos(radians))(0)(0)(0)(0)(1);
 };
-var $author$project$RayTracerChallenge$transformScale = F3(
-	function (x, y, z) {
-		return $author$project$RayTracerChallenge$Transform(x)(0)(0)(0)(0)(y)(0)(0)(0)(0)(z)(0)(0)(0)(0)(1);
-	});
-var $author$project$RayTracerChallenge$worldInsertShape = F2(
-	function (shape, world) {
-		return _Utils_update(
-			world,
-			{
-				b5: world.b5 + 1,
-				b6: A2(
-					$elm$core$List$cons,
-					_Utils_update(
-						shape,
-						{p: world.b5}),
-					world.b6)
-			});
-	});
-var $author$project$Main$cover = function () {
-	var xform = function (lst) {
-		return $author$project$RayTracerChallenge$transformInverse(
-			A3($elm$core$List$foldl, $author$project$RayTracerChallenge$transformMul, $author$project$RayTracerChallenge$transformIdentity, lst));
-	};
+var $author$project$RayTracerDsl$rotateX = function (a) {
+	return $author$project$RayTracerDsl$applyTransform(
+		$author$project$Geometry$matNewRotateX(a));
+};
+var $author$project$Main$coverAssembly = function () {
 	var white = {
-		I: 0.1,
-		o: $elm$core$Basics$always($author$project$RayTracerChallenge$colourWhite),
-		L: 0.7,
-		U: 0.1,
-		_: 1,
-		bM: true,
-		ae: 200,
-		aa: 0.0,
-		ab: 0
+		r: 0.1,
+		k: $elm$core$Basics$always(
+			{j: 1, l: 1, n: 1}),
+		s: 0.7,
+		u: 0.1,
+		C: 1.5,
+		D: true,
+		P: 200,
+		E: 0.0,
+		A: 0
 	};
-	var _v0 = _Utils_Tuple3($author$project$RayTracerChallenge$defaultCube, $author$project$RayTracerChallenge$defaultPlane, $author$project$RayTracerChallenge$defaultSphere);
-	var cube = _v0.a;
-	var plane = _v0.b;
-	var sphere = _v0.c;
-	var addCube = F5(
-		function (material, size, x, y, z) {
-			return $author$project$RayTracerChallenge$worldInsertShape(
-				_Utils_update(
-					cube,
-					{
-						f: material,
-						j: xform(
-							A2(
-								$elm$core$List$append,
-								size,
-								_List_fromArray(
-									[
-										A3($author$project$RayTracerChallenge$transformTranslate, x, y, z)
-									])))
-					}));
-		});
-	var _v1 = _Utils_Tuple3(
-		_List_fromArray(
-			[
-				A3($author$project$RayTracerChallenge$transformTranslate, 1, -1, 1),
-				A3($author$project$RayTracerChallenge$transformScale, 0.5, 0.5, 0.5),
-				A3($author$project$RayTracerChallenge$transformScale, 3.5, 3.5, 3.5)
-			]),
-		_List_fromArray(
-			[
-				A3($author$project$RayTracerChallenge$transformTranslate, 1, -1, 1),
-				A3($author$project$RayTracerChallenge$transformScale, 0.5, 0.5, 0.5),
-				A3($author$project$RayTracerChallenge$transformScale, 3, 3, 3)
-			]),
-		_List_fromArray(
-			[
-				A3($author$project$RayTracerChallenge$transformTranslate, 1, -1, 1),
-				A3($author$project$RayTracerChallenge$transformScale, 0.5, 0.5, 0.5),
-				A3($author$project$RayTracerChallenge$transformScale, 2, 2, 2)
-			]));
-	var large = _v1.a;
-	var medium = _v1.b;
-	var small = _v1.c;
-	var _v2 = _Utils_Tuple3(
+	var _v0 = _Utils_Tuple3(
 		_Utils_update(
 			white,
 			{
-				o: $elm$core$Basics$always(
-					{K: 0.914, N: 0.831, T: 0.537})
+				k: $elm$core$Basics$always(
+					{j: 0.914, l: 0.831, n: 0.537})
 			}),
 		_Utils_update(
 			white,
 			{
-				o: $elm$core$Basics$always(
-					{K: 0.388, N: 0.322, T: 0.941})
+				k: $elm$core$Basics$always(
+					{j: 0.388, l: 0.322, n: 0.941})
 			}),
 		_Utils_update(
 			white,
 			{
-				o: $elm$core$Basics$always(
-					{K: 0.55, N: 0.404, T: 0.373})
+				k: $elm$core$Basics$always(
+					{j: 0.55, l: 0.404, n: 0.373})
 			}));
-	var blue = _v2.a;
-	var red = _v2.b;
-	var purple = _v2.c;
-	return {
-		ay: $author$project$RayTracerChallenge$makeCamera(
-			{
-				aC: $elm$core$Basics$pi / 4,
-				aD: 600,
-				aE: 600,
-				aH: 5,
-				aP: {t: -6, u: 6, v: -10},
-				aQ: {t: 6, u: 0, v: 6},
-				aR: {az: -0.45, aA: 1, aB: 0}
-			}),
-		aG: _List_fromArray(
-			[
-				{
-				o: $author$project$RayTracerChallenge$colourWhite,
-				at: {t: 50, u: 100, v: -50}
-			},
-				{
-				o: {K: 0.2, N: 0.2, T: 0.2},
-				at: {t: -400, u: 50, v: -10}
-			}
-			]),
-		aS: A6(
-			addCube,
-			white,
-			large,
-			-0.5,
-			-8.5,
-			8,
-			A6(
-				addCube,
-				white,
-				large,
-				0,
-				-8,
-				4,
-				A6(
-					addCube,
-					purple,
-					large,
-					-0.5,
-					-4.5,
-					8,
-					A6(
-						addCube,
-						white,
-						large,
-						0,
-						-4,
-						4,
-						A6(
-							addCube,
+	var blue = _v0.a;
+	var red = _v0.b;
+	var purple = _v0.c;
+	return A4(
+		$author$project$RayTracerDsl$translate,
+		1.25,
+		-10.25,
+		1.25,
+		A4(
+			$author$project$RayTracerDsl$scale,
+			0.25,
+			0.25,
+			0.25,
+			$author$project$RayTracerDsl$group(
+				_List_fromArray(
+					[
+						A2(
+						$author$project$RayTracerDsl$material,
+						_Utils_update(
 							white,
-							large,
-							8.5,
-							-4,
+							{r: 1, s: 0, u: 0}),
+						A4(
+							$author$project$RayTracerDsl$translate,
 							0,
-							A6(
-								addCube,
-								red,
-								large,
-								4,
-								-4,
-								0,
-								A6(
-									addCube,
-									blue,
-									large,
-									-0.5,
-									-5,
-									0.25,
-									A6(
-										addCube,
-										white,
-										small,
-										20,
-										1,
-										9,
-										A6(
-											addCube,
-											white,
-											small,
-											8,
-											2,
-											12,
-											A6(
-												addCube,
-												red,
-												medium,
-												10,
-												2,
-												7.5,
-												A6(
-													addCube,
-													blue,
-													large,
-													4,
-													1,
-													7.5,
-													A6(
-														addCube,
-														white,
-														medium,
-														-0.25,
-														0.25,
-														8,
-														A6(
-															addCube,
-															purple,
-															medium,
-															7.5,
-															0.5,
-															4,
-															A6(
-																addCube,
-																white,
-																small,
-																4,
-																0,
-																4,
-																A6(
-																	addCube,
-																	red,
-																	large,
-																	0,
-																	0,
-																	4,
-																	A6(
-																		addCube,
-																		blue,
-																		large,
-																		8.5,
-																		1.5,
-																		-0.5,
-																		A6(
-																			addCube,
-																			white,
-																			medium,
-																			4,
-																			0,
-																			0,
-																			A2(
-																				$author$project$RayTracerChallenge$worldInsertShape,
-																				_Utils_update(
-																					sphere,
-																					{
-																						f: _Utils_update(
-																							purple,
-																							{I: 0, L: 0.2, U: 0.7, _: 1.5, aa: 1, ab: 0.7}),
-																						j: xform(large)
-																					}),
-																				A2(
-																					$author$project$RayTracerChallenge$worldInsertShape,
-																					_Utils_update(
-																						plane,
-																						{
-																							f: _Utils_update(
-																								white,
-																								{I: 1, L: 0, U: 0}),
-																							j: xform(
-																								_List_fromArray(
-																									[
-																										$author$project$RayTracerChallenge$transformRotateX($elm$core$Basics$pi / 2),
-																										A3($author$project$RayTracerChallenge$transformTranslate, 0, 0, 500)
-																									]))
-																						}),
-																					{b5: 1, b6: _List_Nil})))))))))))))))))))
-	};
+							0,
+							500,
+							A2($author$project$RayTracerDsl$rotateX, $elm$core$Basics$pi / 2, $author$project$RayTracerDsl$plane))),
+						A2(
+						$author$project$RayTracerDsl$material,
+						_Utils_update(
+							purple,
+							{r: 0, s: 0.2, u: 0.7, E: 1, A: 0.7}),
+						A4(
+							$author$project$RayTracerDsl$translate,
+							2,
+							34,
+							2,
+							A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$sphere))),
+						A2(
+						$author$project$RayTracerDsl$material,
+						white,
+						$author$project$RayTracerDsl$group(
+							_List_fromArray(
+								[
+									A4(
+									$author$project$RayTracerDsl$translate,
+									15,
+									37,
+									15,
+									A4($author$project$RayTracerDsl$scale, 8, 8, 8, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									31,
+									45,
+									47,
+									A4($author$project$RayTracerDsl$scale, 8, 8, 8, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									79,
+									41,
+									35,
+									A4($author$project$RayTracerDsl$scale, 8, 8, 8, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									17,
+									35,
+									1,
+									A4($author$project$RayTracerDsl$scale, 12, 12, 12, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									36,
+									33,
+									A4($author$project$RayTracerDsl$scale, 12, 12, 12, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									36,
+									18,
+									2,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									2,
+									18,
+									18,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									2,
+									2,
+									18,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									0,
+									34,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube))
+								]))),
+						A2(
+						$author$project$RayTracerDsl$material,
+						blue,
+						$author$project$RayTracerDsl$group(
+							_List_fromArray(
+								[
+									A4(
+									$author$project$RayTracerDsl$translate,
+									36,
+									40,
+									0,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									18,
+									38,
+									32,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									14,
+									3,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube))
+								]))),
+						A2(
+						$author$project$RayTracerDsl$material,
+						red,
+						$author$project$RayTracerDsl$group(
+							_List_fromArray(
+								[
+									A4(
+									$author$project$RayTracerDsl$translate,
+									41,
+									43,
+									31,
+									A4($author$project$RayTracerDsl$scale, 12, 12, 12, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									18,
+									18,
+									2,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									2,
+									34,
+									18,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube))
+								]))),
+						A2(
+						$author$project$RayTracerDsl$material,
+						purple,
+						$author$project$RayTracerDsl$group(
+							_List_fromArray(
+								[
+									A4(
+									$author$project$RayTracerDsl$translate,
+									31,
+									37,
+									17,
+									A4($author$project$RayTracerDsl$scale, 12, 12, 12, $author$project$RayTracerDsl$cube)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									16,
+									34,
+									A4($author$project$RayTracerDsl$scale, 14, 14, 14, $author$project$RayTracerDsl$cube))
+								])))
+					]))));
 }();
+var $author$project$RayTracerChallenge$colourWhite = {j: 1, l: 1, n: 1};
+var $author$project$RayTracerChallenge$newLight = function (point) {
+	return {k: $author$project$RayTracerChallenge$colourWhite, b3: point};
+};
+var $author$project$RayTracerDsl$light = $author$project$RayTracerChallenge$newLight;
+var $author$project$Geometry$pntNewPoint = F3(
+	function (x, y, z) {
+		return A3($author$project$Geometry$Point, x, y, z);
+	});
+var $author$project$RayTracerDsl$point = $author$project$Geometry$pntNewPoint;
+var $author$project$Geometry$vecNewUnit = F3(
+	function (dx, dy, dz) {
+		return $author$project$Geometry$vecUnit(
+			A3($author$project$Geometry$Vector, dx, dy, dz));
+	});
+var $author$project$RayTracerDsl$vector = $author$project$Geometry$vecNewUnit;
+var $author$project$Main$cover = {
+	au: $author$project$Main$coverAssembly,
+	ax: $author$project$RayTracerDsl$camera(
+		{
+			aK: $elm$core$Basics$pi / 4,
+			aL: 320,
+			aM: 320,
+			aO: 5,
+			aZ: A3($author$project$RayTracerDsl$point, -6, 6, -10),
+			a_: A3($author$project$RayTracerDsl$point, 6, 0, 6),
+			a0: A3($author$project$RayTracerDsl$vector, -0.45, 1, 0)
+		}),
+	aN: _List_fromArray(
+		[
+			$author$project$RayTracerDsl$light(
+			A3($author$project$RayTracerDsl$point, 50, 100, -50)),
+			{
+			k: {j: 0.2, l: 0.2, n: 0.2},
+			b3: A3($author$project$RayTracerDsl$point, -400, 50, -10)
+		}
+		])
+};
+var $author$project$Main$csg = function () {
+	var mat = {
+		r: 0.3,
+		k: $elm$core$Basics$always(
+			{j: 0.5, l: 1, n: 1}),
+		s: 0.8,
+		u: 0,
+		C: 1,
+		D: false,
+		P: 100,
+		E: 0.3,
+		A: 0
+	};
+	return A4(
+		$author$project$RayTracerDsl$scale,
+		30,
+		30,
+		30,
+		A2(
+			$author$project$RayTracerDsl$subtract,
+			A2(
+				$author$project$RayTracerDsl$material,
+				_Utils_update(
+					mat,
+					{
+						k: $elm$core$Basics$always(
+							{j: 1, l: 1, n: 0.5})
+					}),
+				A4($author$project$RayTracerDsl$translate, 0.4, 0.4, -0.4, $author$project$RayTracerDsl$sphere)),
+			A2($author$project$RayTracerDsl$material, mat, $author$project$RayTracerDsl$cube)));
+}();
+var $author$project$RayTracerDsl$primitive = function (config) {
+	return A2(
+		$author$project$RayTracerChallenge$Primitive,
+		_List_Nil,
+		{
+			S: $author$project$Geometry$shpNewShape(config),
+			J: 0,
+			m: $author$project$RayTracerChallenge$defaultMaterial,
+			W: $author$project$Geometry$matNewIdentity
+		});
+};
+var $author$project$Geometry$matNewRotateZ = function (radians) {
+	return $author$project$Geometry$Matrix(
+		$elm$core$Basics$cos(radians))(
+		-$elm$core$Basics$sin(radians))(0)(0)(
+		$elm$core$Basics$sin(radians))(
+		$elm$core$Basics$cos(radians))(0)(0)(0)(0)(1)(0)(0)(0)(0)(1);
+};
+var $author$project$RayTracerDsl$rotateZ = function (a) {
+	return $author$project$RayTracerDsl$applyTransform(
+		$author$project$Geometry$matNewRotateZ(a));
+};
+var $author$project$Main$csghex = function () {
+	var oldmat = {
+		r: 0.6,
+		k: $elm$core$Basics$always(
+			{j: 0.1, l: 0.1, n: 0.25}),
+		s: 0.9,
+		u: 0,
+		C: 1,
+		D: false,
+		P: 300,
+		E: 0.99,
+		A: 0.999
+	};
+	return A2(
+		$author$project$RayTracerDsl$material,
+		{
+			r: 0.2,
+			k: $elm$core$Basics$always(
+				{j: 0.5, l: 0.5, n: 0.9}),
+			s: 0.8,
+			u: 0.7,
+			C: 1.3,
+			D: false,
+			P: 300,
+			E: 0.8,
+			A: 0.5
+		},
+		A4(
+			$author$project$RayTracerDsl$scale,
+			5,
+			5,
+			5,
+			A2(
+				$author$project$RayTracerDsl$rotateX,
+				$elm$core$Basics$pi / 3,
+				$author$project$RayTracerDsl$union(
+					A2(
+						$elm$core$List$map,
+						function (i) {
+							return A2(
+								$author$project$RayTracerDsl$rotateZ,
+								i,
+								A4(
+									$author$project$RayTracerDsl$translate,
+									3.5,
+									-2,
+									0,
+									$author$project$RayTracerDsl$union(
+										_List_fromArray(
+											[
+												$author$project$RayTracerDsl$primitive(
+												$author$project$Geometry$Cylinder(
+													{a5: true, _: 4, aa: 0})),
+												A4($author$project$RayTracerDsl$scale, 2, 2, 2, $author$project$RayTracerDsl$sphere)
+											]))));
+						},
+						A2(
+							$elm$core$List$map,
+							function (i) {
+								return (i * $elm$core$Basics$pi) / 3;
+							},
+							A2($elm$core$List$range, 0, 5)))))));
+}();
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$browser$Browser$External = function (a) {
 	return {$: 1, a: a};
 };
@@ -5497,7 +6488,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {bo: fragment, bq: host, by: path, bA: port_, bE: protocol, bF: query};
+		return {bf: fragment, bh: host, br: path, bt: port_, bx: protocol, by: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5634,20 +6625,6 @@ var $elm$core$Basics$never = function (_v0) {
 var $elm$core$Task$Perform = $elm$core$Basics$identity;
 var $elm$core$Task$succeed = _Scheduler_succeed;
 var $elm$core$Task$init = $elm$core$Task$succeed(0);
-var $elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						$elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
 var $elm$core$Task$andThen = _Scheduler_andThen;
 var $elm$core$Task$map = F2(
 	function (func, taskA) {
@@ -5721,7 +6698,55 @@ var $elm$core$Task$perform = F2(
 			A2($elm$core$Task$map, toMessage, task));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$hex = A2(
+	$author$project$RayTracerDsl$material,
+	{
+		r: 0.2,
+		k: $elm$core$Basics$always(
+			{j: 0.5, l: 0.5, n: 0.9}),
+		s: 0.8,
+		u: 0.7,
+		C: 1.3,
+		D: false,
+		P: 300,
+		E: 0.8,
+		A: 0.5
+	},
+	A4(
+		$author$project$RayTracerDsl$scale,
+		5,
+		5,
+		5,
+		A2(
+			$author$project$RayTracerDsl$rotateX,
+			$elm$core$Basics$pi / 3,
+			$author$project$RayTracerDsl$group(
+				A2(
+					$elm$core$List$map,
+					function (i) {
+						return A2(
+							$author$project$RayTracerDsl$rotateZ,
+							i,
+							A4(
+								$author$project$RayTracerDsl$translate,
+								3.5,
+								-2,
+								0,
+								$author$project$RayTracerDsl$group(
+									_List_fromArray(
+										[
+											A4($author$project$RayTracerDsl$scale, 2, 2, 2, $author$project$RayTracerDsl$sphere),
+											$author$project$RayTracerDsl$primitive(
+											$author$project$Geometry$Cylinder(
+												{a5: false, _: 4, aa: 0}))
+										]))));
+					},
+					A2(
+						$elm$core$List$map,
+						function (i) {
+							return ($elm$core$Basics$pi / 3) * i;
+						},
+						A2($elm$core$List$range, 0, 5)))))));
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -5730,11 +6755,261 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $author$project$RayTracerChallenge$Ray = F2(
-	function (point, vector) {
-		return {at: point, l: vector};
+var $author$project$Main$infobubble = function () {
+	var mat = {
+		r: 0.2,
+		k: $elm$core$Basics$always(
+			{j: 0.8, l: 0.7, n: 0.9}),
+		s: 0.6,
+		u: 0,
+		C: 1,
+		D: true,
+		P: 300,
+		E: 0,
+		A: 0
+	};
+	var cylinder = $author$project$RayTracerDsl$primitive(
+		$author$project$Geometry$Cylinder(
+			{a5: true, _: 1, aa: 0}));
+	return {
+		au: $author$project$RayTracerDsl$group(
+			_List_fromArray(
+				[
+					A2(
+					$author$project$RayTracerDsl$material,
+					_Utils_update(
+						mat,
+						{
+							r: 0.5,
+							k: $elm$core$Basics$always(
+								{j: 1, l: 1, n: 1}),
+							s: 1,
+							u: 0.4
+						}),
+					A4($author$project$RayTracerDsl$translate, 0, -0.25, 0, $author$project$RayTracerDsl$plane)),
+					A2(
+					$author$project$RayTracerDsl$material,
+					_Utils_update(
+						mat,
+						{
+							r: 0,
+							k: $elm$core$Basics$always(
+								{j: 1, l: 0.5, n: 0.5}),
+							s: 1,
+							u: 0.1
+						}),
+					A4(
+						$author$project$RayTracerDsl$translate,
+						0,
+						10,
+						10,
+						A4($author$project$RayTracerDsl$scale, 2, 2, 2, $author$project$RayTracerDsl$sphere))),
+					A2(
+					$author$project$RayTracerDsl$material,
+					_Utils_update(
+						mat,
+						{
+							r: 0.4,
+							k: $elm$core$Basics$always(
+								{j: 0.36, l: 0.3, n: 0.3}),
+							s: 0.1,
+							u: 0.2,
+							C: 1.00025,
+							D: false,
+							A: 0.9
+						}),
+					A4(
+						$author$project$RayTracerDsl$translate,
+						0,
+						2.5,
+						0,
+						A4($author$project$RayTracerDsl$scale, 8, 8, 8, $author$project$RayTracerDsl$sphere))),
+					A2(
+					$author$project$RayTracerDsl$material,
+					mat,
+					A4(
+						$author$project$RayTracerDsl$scale,
+						0.01,
+						0.01,
+						0.01,
+						$author$project$RayTracerDsl$group(
+							_List_fromArray(
+								[
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									500,
+									0,
+									A4($author$project$RayTracerDsl$scale, 100, 100, 100, $author$project$RayTracerDsl$sphere)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									425,
+									0,
+									A4($author$project$RayTracerDsl$scale, 10, 25, 10, cylinder)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									200,
+									400,
+									0,
+									A2(
+										$author$project$RayTracerDsl$rotateZ,
+										$elm$core$Basics$pi / 2,
+										A4($author$project$RayTracerDsl$scale, 10, 400, 10, cylinder))),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									250,
+									0,
+									A4($author$project$RayTracerDsl$scale, 120, 160, 80, $author$project$RayTracerDsl$sphere)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									350,
+									0,
+									A4($author$project$RayTracerDsl$scale, 120, 160, 80, $author$project$RayTracerDsl$sphere)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									160,
+									-25,
+									0,
+									A4($author$project$RayTracerDsl$scale, 60, 30, 120, $author$project$RayTracerDsl$sphere)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									200,
+									400,
+									0,
+									A4($author$project$RayTracerDsl$scale, 50, 50, 20, $author$project$RayTracerDsl$sphere)),
+									A4(
+									$author$project$RayTracerDsl$translate,
+									0,
+									250,
+									0,
+									A2(
+										$author$project$RayTracerDsl$rotateZ,
+										(7 * $elm$core$Basics$pi) / 6,
+										A4($author$project$RayTracerDsl$scale, 10, 300, 10, cylinder))),
+									A4(
+									$author$project$RayTracerDsl$scale,
+									-1,
+									1,
+									1,
+									A4(
+										$author$project$RayTracerDsl$translate,
+										160,
+										-25,
+										0,
+										A4($author$project$RayTracerDsl$scale, 60, 30, 120, $author$project$RayTracerDsl$sphere))),
+									A4(
+									$author$project$RayTracerDsl$scale,
+									-1,
+									1,
+									1,
+									A4(
+										$author$project$RayTracerDsl$translate,
+										200,
+										400,
+										0,
+										A4($author$project$RayTracerDsl$scale, 50, 50, 20, $author$project$RayTracerDsl$sphere))),
+									A4(
+									$author$project$RayTracerDsl$scale,
+									-1,
+									1,
+									1,
+									A4(
+										$author$project$RayTracerDsl$translate,
+										0,
+										250,
+										0,
+										A2(
+											$author$project$RayTracerDsl$rotateZ,
+											(7 * $elm$core$Basics$pi) / 6,
+											A4($author$project$RayTracerDsl$scale, 10, 300, 10, cylinder))))
+								]))))
+				])),
+		ax: $author$project$RayTracerDsl$camera(
+			{
+				aK: $elm$core$Basics$pi / 15,
+				aL: 160 * 2,
+				aM: 160 * 2,
+				aO: 3,
+				aZ: A3($author$project$RayTracerDsl$point, 50, 5.5, -60),
+				a_: A3($author$project$RayTracerDsl$point, 3, 4, 0),
+				a0: A3($author$project$RayTracerDsl$vector, 0, 1, 0)
+			}),
+		aN: _List_fromArray(
+			[
+				$author$project$RayTracerDsl$light(
+				A3($author$project$RayTracerDsl$point, -20, 30, -60))
+			])
+	};
+}();
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Geometry$Cone = function (a) {
+	return {$: 4, a: a};
+};
+var $author$project$RayTracerDsl$cone = A4(
+	$author$project$RayTracerDsl$translate,
+	0,
+	0.5,
+	0,
+	A4(
+		$author$project$RayTracerDsl$scale,
+		0.5,
+		1,
+		0.5,
+		A2(
+			$author$project$RayTracerChallenge$Primitive,
+			_List_Nil,
+			{
+				S: $author$project$Geometry$shpNewShape(
+					$author$project$Geometry$Cone(
+						{a5: true, _: 0, aa: -1})),
+				J: 0,
+				m: $author$project$RayTracerChallenge$defaultMaterial,
+				W: $author$project$Geometry$matNewIdentity
+			})));
+var $author$project$Geometry$Triangle = function (a) {
+	return {$: 5, a: a};
+};
+var $author$project$RayTracerDsl$triangle = A2(
+	$author$project$RayTracerChallenge$Primitive,
+	_List_Nil,
+	{
+		S: $author$project$Geometry$shpNewShape(
+			$author$project$Geometry$Triangle(
+				{
+					G: A3($author$project$RayTracerDsl$point, 0, 0, 0),
+					av: A3($author$project$RayTracerDsl$point, 1, 0, 0),
+					aw: A3($author$project$RayTracerDsl$point, 0, 0, 1)
+				})),
+		J: 0,
+		m: $author$project$RayTracerChallenge$defaultMaterial,
+		W: $author$project$Geometry$matNewIdentity
 	});
-var $author$project$RayTracerChallenge$pointTransform = F2(
+var $author$project$Main$primitives = A4(
+	$author$project$RayTracerDsl$scale,
+	10,
+	10,
+	10,
+	$author$project$RayTracerDsl$group(
+		_List_fromArray(
+			[
+				$author$project$RayTracerDsl$plane,
+				A4($author$project$RayTracerDsl$translate, -1, 0.5, -1, $author$project$RayTracerDsl$cube),
+				A4($author$project$RayTracerDsl$translate, 2, 0.5, -3.5, $author$project$RayTracerDsl$sphere),
+				A4($author$project$RayTracerDsl$translate, 1, 0.5, 0, $author$project$RayTracerDsl$cylinder),
+				A4($author$project$RayTracerDsl$translate, 3, 0.5, -1.5, $author$project$RayTracerDsl$cone),
+				A4(
+				$author$project$RayTracerDsl$translate,
+				-3,
+				1,
+				2,
+				A2($author$project$RayTracerDsl$rotateX, (-$elm$core$Basics$pi) / 4, $author$project$RayTracerDsl$triangle))
+			])));
+var $author$project$Geometry$pntTransform = F2(
 	function (_v0, _v1) {
 		var j11 = _v0.a;
 		var j12 = _v0.b;
@@ -5748,42 +7023,47 @@ var $author$project$RayTracerChallenge$pointTransform = F2(
 		var j32 = _v0.j;
 		var j33 = _v0.k;
 		var j34 = _v0.l;
-		var j41 = _v0.m;
-		var j42 = _v0.n;
-		var j43 = _v0.o;
-		var j44 = _v0.p;
-		var x = _v1.t;
-		var y = _v1.u;
-		var z = _v1.v;
-		return {t: ((j14 + (j13 * z)) + (j12 * y)) + (j11 * x), u: ((j24 + (j23 * z)) + (j22 * y)) + (j21 * x), v: ((j34 + (j33 * z)) + (j32 * y)) + (j31 * x)};
+		var x = _v1.a;
+		var y = _v1.b;
+		var z = _v1.c;
+		return A3($author$project$Geometry$Point, ((j14 + (j13 * z)) + (j12 * y)) + (j11 * x), ((j24 + (j23 * z)) + (j22 * y)) + (j21 * x), ((j34 + (j33 * z)) + (j32 * y)) + (j31 * x));
+	});
+var $author$project$Geometry$Ray = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $author$project$Geometry$rayNewRay = F2(
+	function (rpoint, vector) {
+		return A2($author$project$Geometry$Ray, rpoint, vector);
 	});
 var $author$project$RayTracerChallenge$cameraRayForPixel = F2(
 	function (camera, pixel) {
-		var toWorldSpace = $author$project$RayTracerChallenge$pointTransform(camera.bd);
+		var toWorldSpace = $author$project$Geometry$pntTransform(camera.a$);
 		var target = toWorldSpace(
-			{t: camera.aM - (camera.as * pixel.t), u: camera.aL - (camera.as * pixel.u), v: -1});
-		var origin = toWorldSpace($author$project$RayTracerChallenge$defaultPoint);
+			A3($author$project$Geometry$pntNewPoint, camera.ar - (camera.ak * pixel.a1), camera.aq - (camera.ak * pixel.a2), -1));
+		var origin = toWorldSpace(
+			A3($author$project$Geometry$pntNewPoint, 0, 0, 0));
 		return A2(
-			$author$project$RayTracerChallenge$Ray,
+			$author$project$Geometry$rayNewRay,
 			origin,
-			$author$project$RayTracerChallenge$vectorNormalize(
-				A2($author$project$RayTracerChallenge$vectorBetweenPoints, origin, target)));
+			$author$project$Geometry$vecUnit(
+				A2($author$project$Geometry$vecBetweenPoints, origin, target)));
 	});
-var $author$project$RayTracerChallenge$colourBlack = {K: 0, N: 0, T: 0};
+var $author$project$RayTracerChallenge$colourBlack = {j: 0, l: 0, n: 0};
 var $author$project$RayTracerChallenge$colourMul = F2(
 	function (a, b) {
-		return {K: a.K * b.K, N: a.N * b.N, T: a.T * b.T};
+		return {j: a.j * b.j, l: a.l * b.l, n: a.n * b.n};
 	});
 var $author$project$RayTracerChallenge$colourScaleBy = F2(
 	function (scale, colour) {
 		return A2(
 			$author$project$RayTracerChallenge$colourMul,
-			{K: scale, N: scale, T: scale},
+			{j: scale, l: scale, n: scale},
 			colour);
 	});
 var $author$project$RayTracerChallenge$colourSum = F2(
 	function (a, b) {
-		return {K: a.K + b.K, N: a.N + b.N, T: a.T + b.T};
+		return {j: a.j + b.j, l: a.l + b.l, n: a.n + b.n};
 	});
 var $elm$core$Basics$composeR = F3(
 	function (f, g, x) {
@@ -5791,23 +7071,27 @@ var $elm$core$Basics$composeR = F3(
 			f(x));
 	});
 var $author$project$RayTracerChallenge$defaultHit = {
-	M: {az: 1, aA: 0, aB: 0},
-	aF: false,
-	P: 1,
-	Q: 1,
-	n: {az: 1, aA: 0, aB: 0},
-	e: $author$project$RayTracerChallenge$defaultSphere,
-	ar: $author$project$RayTracerChallenge$defaultPoint,
-	at: $author$project$RayTracerChallenge$defaultPoint,
-	S: A2(
-		$author$project$RayTracerChallenge$Ray,
-		$author$project$RayTracerChallenge$defaultPoint,
-		{az: 1, aA: 0, aB: 0}),
-	aN: {az: 1, aA: 0, aB: 0},
-	x: 0,
-	aO: $author$project$RayTracerChallenge$defaultPoint
+	I: A3($author$project$Geometry$vecNewUnit, 1, 0, 0),
+	ap: false,
+	L: 1,
+	M: 1,
+	p: A3($author$project$Geometry$vecNewUnit, 1, 0, 0),
+	e: {
+		S: $author$project$Geometry$shpNewShape($author$project$Geometry$Sphere),
+		J: 0,
+		m: $author$project$RayTracerChallenge$defaultMaterial,
+		W: $author$project$Geometry$matNewIdentity
+	},
+	aj: A3($author$project$Geometry$pntNewPoint, 0, 0, 0),
+	b3: A3($author$project$Geometry$pntNewPoint, 0, 0, 0),
+	O: A2(
+		$author$project$Geometry$rayNewRay,
+		A3($author$project$Geometry$pntNewPoint, 0, 0, 0),
+		A3($author$project$Geometry$vecNewUnit, 1, 0, 0)),
+	as: A3($author$project$Geometry$vecNewUnit, 1, 0, 0),
+	q: 0,
+	at: A3($author$project$Geometry$pntNewPoint, 0, 0, 0)
 };
-var $author$project$RayTracerChallenge$epsilon = 1.0e-6;
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5838,19 +7122,6 @@ var $elm$core$Maybe$map = F2(
 			return $elm$core$Maybe$Nothing;
 		}
 	});
-var $author$project$RayTracerChallenge$pointAlongRay = F2(
-	function (ray, t) {
-		var _v0 = _Utils_Tuple2(
-			ray.at,
-			A2($author$project$RayTracerChallenge$vectorScaleBy, t, ray.l));
-		var x = _v0.a.t;
-		var y = _v0.a.u;
-		var z = _v0.a.v;
-		var dx = _v0.b.az;
-		var dy = _v0.b.aA;
-		var dz = _v0.b.aB;
-		return {t: x + dx, u: y + dy, v: z + dz};
-	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -5872,7 +7143,6 @@ var $elm$core$List$any = F2(
 			}
 		}
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (!maybe.$) {
@@ -5898,10 +7168,10 @@ var $author$project$RayTracerChallenge$refractionIndices = F2(
 						A2(
 							$elm$core$Basics$composeR,
 							function ($) {
-								return $.f;
+								return $.m;
 							},
 							function ($) {
-								return $._;
+								return $.C;
 							})),
 					$elm$core$List$head(shapes)));
 		};
@@ -5922,9 +7192,9 @@ var $author$project$RayTracerChallenge$refractionIndices = F2(
 								A2(
 									$elm$core$Basics$composeR,
 									function ($) {
-										return $.p;
+										return $.J;
 									},
-									$elm$core$Basics$eq(intersection.e.p))),
+									$elm$core$Basics$eq(intersection.e.J))),
 							exiting) ? A2(
 							$elm$core$List$filter,
 							A2(
@@ -5935,16 +7205,16 @@ var $author$project$RayTracerChallenge$refractionIndices = F2(
 								A2(
 									$elm$core$Basics$composeR,
 									function ($) {
-										return $.p;
+										return $.J;
 									},
-									$elm$core$Basics$neq(intersection.e.p))),
+									$elm$core$Basics$neq(intersection.e.J))),
 							exiting) : A2($elm$core$List$cons, intersection, exiting);
-						if (_Utils_eq(intersection.x, hit.x)) {
+						if (_Utils_eq(intersection.q, hit.q)) {
 							return _Utils_update(
 								hit,
 								{
-									P: refractiveIndex(exiting),
-									Q: refractiveIndex(entering)
+									L: refractiveIndex(exiting),
+									M: refractiveIndex(entering)
 								});
 						} else {
 							var $temp$exiting = entering,
@@ -5960,7 +7230,17 @@ var $author$project$RayTracerChallenge$refractionIndices = F2(
 			});
 		return A2(loop, _List_Nil, intersections);
 	});
-var $author$project$RayTracerChallenge$transformTranspose = function (_v0) {
+var $author$project$Geometry$vecReflect = F2(
+	function (normal, inbound) {
+		return A2(
+			$author$project$Geometry$vecSubtract,
+			inbound,
+			A2(
+				$author$project$Geometry$vecScaleBy,
+				2 * A2($author$project$Geometry$vecDot, inbound, normal),
+				normal));
+	});
+var $author$project$Geometry$matTranspose = function (_v0) {
 	var j11 = _v0.a;
 	var j12 = _v0.b;
 	var j13 = _v0.c;
@@ -5977,60 +7257,35 @@ var $author$project$RayTracerChallenge$transformTranspose = function (_v0) {
 	var j42 = _v0.n;
 	var j43 = _v0.o;
 	var j44 = _v0.p;
-	return $author$project$RayTracerChallenge$Transform(j11)(j21)(j31)(j41)(j12)(j22)(j32)(j42)(j13)(j23)(j33)(j43)(j14)(j24)(j34)(j44);
+	return $author$project$Geometry$Matrix(j11)(j21)(j31)(j41)(j12)(j22)(j32)(j42)(j13)(j23)(j33)(j43)(j14)(j24)(j34)(j44);
 };
-var $author$project$RayTracerChallenge$vectorTransform = F2(
+var $author$project$Geometry$vecTransform = F2(
 	function (_v0, _v1) {
 		var j11 = _v0.a;
 		var j12 = _v0.b;
 		var j13 = _v0.c;
-		var j14 = _v0.d;
 		var j21 = _v0.e;
 		var j22 = _v0.f;
 		var j23 = _v0.g;
-		var j24 = _v0.h;
 		var j31 = _v0.i;
 		var j32 = _v0.j;
 		var j33 = _v0.k;
-		var j34 = _v0.l;
-		var j41 = _v0.m;
-		var j42 = _v0.n;
-		var j43 = _v0.o;
-		var j44 = _v0.p;
-		var dx = _v1.az;
-		var dy = _v1.aA;
-		var dz = _v1.aB;
-		return {az: ((j13 * dz) + (j12 * dy)) + (j11 * dx), aA: ((j23 * dz) + (j22 * dy)) + (j21 * dx), aB: ((j33 * dz) + (j32 * dy)) + (j31 * dx)};
+		var dx = _v1.a;
+		var dy = _v1.b;
+		var dz = _v1.c;
+		return A3($author$project$Geometry$Vector, ((j13 * dz) + (j12 * dy)) + (j11 * dx), ((j23 * dz) + (j22 * dy)) + (j21 * dx), ((j33 * dz) + (j32 * dy)) + (j31 * dx));
 	});
 var $author$project$RayTracerChallenge$vectorNormalAt = F2(
 	function (shape, point) {
-		var toObjectSpace = $author$project$RayTracerChallenge$pointTransform(shape.j);
-		return $author$project$RayTracerChallenge$vectorNormalize(
+		return $author$project$Geometry$vecUnit(
 			A2(
-				$author$project$RayTracerChallenge$vectorTransform,
-				$author$project$RayTracerChallenge$transformTranspose(shape.j),
-				shape.aq(
-					toObjectSpace(point))));
-	});
-var $author$project$RayTracerChallenge$vectorSubtract = F2(
-	function (_v0, _v1) {
-		var a = _v0;
-		var b = _v1;
-		return {az: a.az - b.az, aA: a.aA - b.aA, aB: a.aB - b.aB};
-	});
-var $author$project$RayTracerChallenge$vectorReflect = F2(
-	function (normal, inbound) {
-		var _v0 = A2(
-			$author$project$RayTracerChallenge$vectorSubtract,
-			inbound,
-			A2(
-				$author$project$RayTracerChallenge$vectorScaleBy,
-				2 * A2($author$project$RayTracerChallenge$vectorDot, inbound, normal),
-				normal));
-		var vec = _v0;
-		return vec;
+				$author$project$Geometry$vecTransform,
+				$author$project$Geometry$matTranspose(shape.W),
+				shape.S.bp(
+					A2($author$project$Geometry$pntTransform, shape.W, point))));
 	});
 var $author$project$RayTracerChallenge$hitFromIntersections = function (intersections) {
+	var epsilon = 1.0e-6;
 	return A2(
 		$elm$core$Maybe$map,
 		A2(
@@ -6038,7 +7293,7 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 			function (intersect) {
 				return _Utils_update(
 					$author$project$RayTracerChallenge$defaultHit,
-					{e: intersect.e, S: intersect.S, x: intersect.x});
+					{e: intersect.e, O: intersect.O, q: intersect.q});
 			},
 			A2(
 				$elm$core$Basics$composeR,
@@ -6046,17 +7301,19 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 					return _Utils_update(
 						h,
 						{
-							at: A2($author$project$RayTracerChallenge$pointAlongRay, h.S, h.x)
+							b3: A2($author$project$Geometry$pntAlongRay, h.O, h.q)
 						});
 				},
 				A2(
 					$elm$core$Basics$composeR,
 					function (h) {
+						var _v0 = h.O;
+						var vector = _v0.b;
 						return _Utils_update(
 							h,
 							{
-								M: $author$project$RayTracerChallenge$vectorNormalize(
-									A2($author$project$RayTracerChallenge$vectorScaleBy, -1, h.S.l))
+								I: $author$project$Geometry$vecUnit(
+									A2($author$project$Geometry$vecScaleBy, -1, vector))
 							});
 					},
 					A2(
@@ -6065,7 +7322,7 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 							return _Utils_update(
 								h,
 								{
-									n: A2($author$project$RayTracerChallenge$vectorNormalAt, h.e, h.at)
+									p: A2($author$project$RayTracerChallenge$vectorNormalAt, h.e, h.b3)
 								});
 						},
 						A2(
@@ -6074,7 +7331,7 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 								return _Utils_update(
 									h,
 									{
-										aF: A2($author$project$RayTracerChallenge$vectorDot, h.n, h.M) <= 0
+										ap: A2($author$project$Geometry$vecDot, h.p, h.I) <= 0
 									});
 							},
 							A2(
@@ -6083,17 +7340,19 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 									return _Utils_update(
 										h,
 										{
-											n: h.aF ? $author$project$RayTracerChallenge$vectorNormalize(
-												A2($author$project$RayTracerChallenge$vectorScaleBy, -1, h.n)) : h.n
+											p: h.ap ? $author$project$Geometry$vecUnit(
+												A2($author$project$Geometry$vecScaleBy, -1, h.p)) : h.p
 										});
 								},
 								A2(
 									$elm$core$Basics$composeR,
 									function (h) {
+										var _v1 = h.O;
+										var vector = _v1.b;
 										return _Utils_update(
 											h,
 											{
-												aN: A2($author$project$RayTracerChallenge$vectorReflect, h.n, h.S.l)
+												as: A2($author$project$Geometry$vecReflect, h.p, vector)
 											});
 									},
 									A2(
@@ -6102,10 +7361,10 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 											return _Utils_update(
 												h,
 												{
-													ar: A2(
-														$author$project$RayTracerChallenge$pointAlongRay,
-														A2($author$project$RayTracerChallenge$Ray, h.at, h.n),
-														$author$project$RayTracerChallenge$epsilon)
+													aj: A2(
+														$author$project$Geometry$pntAlongRay,
+														A2($author$project$Geometry$rayNewRay, h.b3, h.p),
+														epsilon)
 												});
 										},
 										A2(
@@ -6114,10 +7373,10 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 												return _Utils_update(
 													h,
 													{
-														aO: A2(
-															$author$project$RayTracerChallenge$pointAlongRay,
-															A2($author$project$RayTracerChallenge$Ray, h.at, h.n),
-															-$author$project$RayTracerChallenge$epsilon)
+														at: A2(
+															$author$project$Geometry$pntAlongRay,
+															A2($author$project$Geometry$rayNewRay, h.b3, h.p),
+															-epsilon)
 													});
 											},
 											$author$project$RayTracerChallenge$refractionIndices(intersections)))))))))),
@@ -6127,86 +7386,194 @@ var $author$project$RayTracerChallenge$hitFromIntersections = function (intersec
 				A2(
 					$elm$core$Basics$composeR,
 					function ($) {
-						return $.x;
+						return $.q;
 					},
 					$elm$core$Basics$le(0)),
 				intersections)));
 };
 var $author$project$RayTracerChallenge$Intersection = F3(
 	function (object, ray, t) {
-		return {e: object, S: ray, x: t};
+		return {e: object, O: ray, q: t};
 	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $author$project$RayTracerChallenge$intersectCsg = F3(
+	function (operand, leftIntersections, rightIntersections) {
+		var csgOperator = F3(
+			function (lhit, inl, inr) {
+				switch (operand) {
+					case 0:
+						return (lhit && (!inr)) || ((!lhit) && (!inl));
+					case 1:
+						return (lhit && inr) || ((!lhit) && inl);
+					default:
+						return (lhit && (!inr)) || ((!lhit) && inl);
+				}
+			});
+		var merge = F4(
+			function (lt, rt, inl, inr) {
+				var update = F3(
+					function (intersection, include, rest) {
+						return include ? A2($elm$core$List$cons, intersection, rest) : rest;
+					});
+				var _v0 = _Utils_Tuple2(lt, rt);
+				if (!_v0.a.b) {
+					if (!_v0.b.b) {
+						return _List_Nil;
+					} else {
+						var _v2 = _v0.b;
+						var r = _v2.a;
+						var right = _v2.b;
+						return A3(
+							update,
+							r,
+							A3(csgOperator, false, inl, inr),
+							A4(merge, _List_Nil, right, inl, !inr));
+					}
+				} else {
+					if (!_v0.b.b) {
+						var _v1 = _v0.a;
+						var l = _v1.a;
+						var left = _v1.b;
+						return A3(
+							update,
+							l,
+							A3(csgOperator, true, inl, inr),
+							A4(merge, left, _List_Nil, !inl, inr));
+					} else {
+						var _v3 = _v0.a;
+						var l = _v3.a;
+						var left = _v3.b;
+						var _v4 = _v0.b;
+						var r = _v4.a;
+						var right = _v4.b;
+						return (_Utils_cmp(l.q, r.q) < 0) ? A3(
+							update,
+							l,
+							A3(csgOperator, true, inl, inr),
+							A4(
+								merge,
+								left,
+								A2($elm$core$List$cons, r, right),
+								!inl,
+								inr)) : A3(
+							update,
+							r,
+							A3(csgOperator, false, inl, inr),
+							A4(
+								merge,
+								A2($elm$core$List$cons, l, left),
+								right,
+								inl,
+								!inr));
+					}
+				}
+			});
+		return A4(merge, leftIntersections, rightIntersections, false, false);
 	});
 var $elm$core$Basics$isInfinite = _Basics_isInfinite;
 var $elm$core$Basics$isNaN = _Basics_isNaN;
-var $elm$core$Basics$not = _Basics_not;
+var $author$project$Geometry$rayTransform = F2(
+	function (transform, _v0) {
+		var rpoint = _v0.a;
+		var vector = _v0.b;
+		return A2(
+			$author$project$Geometry$Ray,
+			A2($author$project$Geometry$pntTransform, transform, rpoint),
+			A2($author$project$Geometry$vecTransform, transform, vector));
+	});
 var $elm$core$List$sortBy = _List_sortBy;
-var $author$project$RayTracerChallenge$intersectShapesByRay = F2(
-	function (shapes, ray) {
-		var intersectShape = function (shape) {
-			var toObjectSpace = function (r) {
-				return A2(
-					$author$project$RayTracerChallenge$Ray,
-					A2($author$project$RayTracerChallenge$pointTransform, shape.j, r.at),
-					A2($author$project$RayTracerChallenge$vectorTransform, shape.j, r.l));
-			};
-			return A2(
-				$elm$core$List$map,
-				A2($author$project$RayTracerChallenge$Intersection, shape, ray),
-				A2(
-					$elm$core$List$filter,
-					A2($elm$core$Basics$composeR, $elm$core$Basics$isInfinite, $elm$core$Basics$not),
-					A2(
-						$elm$core$List$filter,
-						A2($elm$core$Basics$composeR, $elm$core$Basics$isNaN, $elm$core$Basics$not),
-						shape.ao(
-							toObjectSpace(ray)))));
-		};
+var $author$project$RayTracerChallenge$intersectAssembly = F2(
+	function (assembly, ray) {
+		var intersections = function () {
+			switch (assembly.$) {
+				case 3:
+					return _List_Nil;
+				case 2:
+					var shape = assembly.b;
+					return A2(
+						$elm$core$List$map,
+						A2($author$project$RayTracerChallenge$Intersection, shape, ray),
+						shape.S.bl(
+							A2($author$project$Geometry$rayTransform, shape.W, ray)));
+				case 0:
+					var list = assembly.b;
+					return function (fn) {
+						return A2($elm$core$List$concatMap, fn, list);
+					}(
+						F2(
+							function (r, i) {
+								return A2($author$project$RayTracerChallenge$intersectAssembly, i, r);
+							})(ray));
+				default:
+					var op = assembly.b;
+					var left = assembly.c;
+					var right = assembly.d;
+					return A3(
+						$author$project$RayTracerChallenge$intersectCsg,
+						op,
+						A2($author$project$RayTracerChallenge$intersectAssembly, left, ray),
+						A2($author$project$RayTracerChallenge$intersectAssembly, right, ray));
+			}
+		}();
 		return A2(
 			$elm$core$List$sortBy,
 			function ($) {
-				return $.x;
+				return $.q;
 			},
-			A2($elm$core$List$concatMap, intersectShape, shapes));
+			A2(
+				$elm$core$List$filter,
+				A2(
+					$elm$core$Basics$composeL,
+					A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$Basics$isInfinite),
+					function ($) {
+						return $.q;
+					}),
+				A2(
+					$elm$core$List$filter,
+					A2(
+						$elm$core$Basics$composeL,
+						A2($elm$core$Basics$composeL, $elm$core$Basics$not, $elm$core$Basics$isNaN),
+						function ($) {
+							return $.q;
+						}),
+					intersections)));
 	});
 var $elm$core$Basics$pow = _Basics_pow;
 var $author$project$RayTracerChallenge$phongLighting = F2(
 	function (hit, light) {
-		var lightv = $author$project$RayTracerChallenge$vectorNormalize(
-			A2($author$project$RayTracerChallenge$vectorBetweenPoints, hit.at, light.at));
+		var lightv = $author$project$Geometry$vecUnit(
+			A2($author$project$Geometry$vecBetweenPoints, hit.b3, light.b3));
 		var reflectDotEye = A2(
-			$author$project$RayTracerChallenge$vectorDot,
+			$author$project$Geometry$vecDot,
 			A2(
-				$author$project$RayTracerChallenge$vectorReflect,
-				hit.n,
-				A2($author$project$RayTracerChallenge$vectorScaleBy, -1, lightv)),
-			hit.M);
+				$author$project$Geometry$vecReflect,
+				hit.p,
+				A2($author$project$Geometry$vecScaleBy, -1, lightv)),
+			hit.I);
 		var specular = A2(
 			$author$project$RayTracerChallenge$colourScaleBy,
-			hit.e.f.aa * A2($elm$core$Basics$pow, reflectDotEye, hit.e.f.ae),
-			A2($author$project$RayTracerChallenge$colourMul, light.o, $author$project$RayTracerChallenge$colourWhite));
-		var lightDotNormal = A2($author$project$RayTracerChallenge$vectorDot, lightv, hit.n);
+			hit.e.m.E * A2($elm$core$Basics$pow, reflectDotEye, hit.e.m.P),
+			A2($author$project$RayTracerChallenge$colourMul, light.k, $author$project$RayTracerChallenge$colourWhite));
+		var lightDotNormal = A2($author$project$Geometry$vecDot, lightv, hit.p);
 		var diffuse = A2(
 			$author$project$RayTracerChallenge$colourScaleBy,
-			hit.e.f.L * lightDotNormal,
+			hit.e.m.s * lightDotNormal,
 			A2(
 				$author$project$RayTracerChallenge$colourMul,
-				light.o,
-				hit.e.f.o(hit.at)));
+				light.k,
+				hit.e.m.k(hit.b3)));
 		var ambient = A2(
 			$author$project$RayTracerChallenge$colourScaleBy,
-			hit.e.f.I,
+			hit.e.m.r,
 			A2(
 				$author$project$RayTracerChallenge$colourMul,
-				light.o,
-				hit.e.f.o(hit.at)));
+				light.k,
+				hit.e.m.k(hit.b3)));
 		return _Utils_Tuple3(
 			ambient,
 			(lightDotNormal <= 0) ? $author$project$RayTracerChallenge$colourBlack : diffuse,
@@ -6214,7 +7581,7 @@ var $author$project$RayTracerChallenge$phongLighting = F2(
 	});
 var $author$project$RayTracerChallenge$pointInShadow = F3(
 	function (world, point, light) {
-		var vec = A2($author$project$RayTracerChallenge$vectorBetweenPoints, light.at, point);
+		var vec = A2($author$project$Geometry$vecBetweenPoints, light.b3, point);
 		return A2(
 			$elm$core$Maybe$withDefault,
 			false,
@@ -6222,45 +7589,50 @@ var $author$project$RayTracerChallenge$pointInShadow = F3(
 				$elm$core$Maybe$map,
 				function (hit) {
 					return _Utils_cmp(
-						hit.x,
-						$author$project$RayTracerChallenge$vectorMagnitude(vec)) < 0;
+						hit.q,
+						$author$project$Geometry$vecLength(vec)) < 0;
 				},
 				$author$project$RayTracerChallenge$hitFromIntersections(
 					A2(
-						$author$project$RayTracerChallenge$intersectShapesByRay,
+						$elm$core$List$filter,
 						A2(
-							$elm$core$List$filter,
+							$elm$core$Basics$composeR,
+							function ($) {
+								return $.e;
+							},
 							A2(
 								$elm$core$Basics$composeR,
 								function ($) {
-									return $.f;
+									return $.m;
 								},
 								function ($) {
-									return $.bM;
-								}),
-							world.b6),
+									return $.D;
+								})),
 						A2(
-							$author$project$RayTracerChallenge$Ray,
-							light.at,
-							$author$project$RayTracerChallenge$vectorNormalize(vec))))));
+							$author$project$RayTracerChallenge$intersectAssembly,
+							world,
+							A2(
+								$author$project$Geometry$rayNewRay,
+								light.b3,
+								$author$project$Geometry$vecUnit(vec)))))));
 	});
 var $author$project$RayTracerChallenge$refractedRay = function (hit) {
-	var ratio = hit.P / hit.Q;
-	var cos_i = A2($author$project$RayTracerChallenge$vectorDot, hit.M, hit.n);
+	var ratio = hit.L / hit.M;
+	var cos_i = A2($author$project$Geometry$vecDot, hit.I, hit.p);
 	var sin2_t = A2($elm$core$Basics$pow, ratio, 2) * (1 - A2($elm$core$Basics$pow, cos_i, 2));
 	var cos_t = $elm$core$Basics$sqrt(1 - sin2_t);
-	var direction = $author$project$RayTracerChallenge$vectorNormalize(
+	var direction = $author$project$Geometry$vecUnit(
 		A2(
-			$author$project$RayTracerChallenge$vectorSubtract,
-			A2($author$project$RayTracerChallenge$vectorScaleBy, (ratio * cos_i) - cos_t, hit.n),
-			A2($author$project$RayTracerChallenge$vectorScaleBy, ratio, hit.M)));
-	return A2($author$project$RayTracerChallenge$Ray, hit.aO, direction);
+			$author$project$Geometry$vecSubtract,
+			A2($author$project$Geometry$vecScaleBy, (ratio * cos_i) - cos_t, hit.p),
+			A2($author$project$Geometry$vecScaleBy, ratio, hit.I)));
+	return A2($author$project$Geometry$rayNewRay, hit.at, direction);
 };
 var $author$project$RayTracerChallenge$schlickReflectance = function (hit) {
-	var r0 = A2($elm$core$Basics$pow, (hit.P - hit.Q) / (hit.P + hit.Q), 2);
-	var eyeDotNormal = A2($author$project$RayTracerChallenge$vectorDot, hit.M, hit.n);
-	var cos = (_Utils_cmp(hit.P, hit.Q) < 1) ? eyeDotNormal : $elm$core$Basics$sqrt(
-		1 - (A2($elm$core$Basics$pow, hit.P / hit.Q, 2) * (1 - A2($elm$core$Basics$pow, eyeDotNormal, 2))));
+	var r0 = A2($elm$core$Basics$pow, (hit.L - hit.M) / (hit.L + hit.M), 2);
+	var eyeDotNormal = A2($author$project$Geometry$vecDot, hit.I, hit.p);
+	var cos = (_Utils_cmp(hit.L, hit.M) < 1) ? eyeDotNormal : $elm$core$Basics$sqrt(
+		1 - (A2($elm$core$Basics$pow, hit.L / hit.M, 2) * (1 - A2($elm$core$Basics$pow, eyeDotNormal, 2))));
 	var reflectance = r0 + ((1 - r0) * A2($elm$core$Basics$pow, 1 - cos, 5));
 	return $elm$core$Basics$isNaN(reflectance) ? 1 : reflectance;
 };
@@ -6269,7 +7641,7 @@ var $author$project$RayTracerChallenge$colourAtRay = F4(
 		var colourAtHit = function (hit) {
 			var refractedColour = A2(
 				$author$project$RayTracerChallenge$colourScaleBy,
-				hit.e.f.ab,
+				hit.e.m.A,
 				A4(
 					$author$project$RayTracerChallenge$colourAtRay,
 					world,
@@ -6278,19 +7650,19 @@ var $author$project$RayTracerChallenge$colourAtRay = F4(
 					$author$project$RayTracerChallenge$refractedRay(hit)));
 			var reflectedColour = A2(
 				$author$project$RayTracerChallenge$colourScaleBy,
-				hit.e.f.U,
+				hit.e.m.u,
 				A4(
 					$author$project$RayTracerChallenge$colourAtRay,
 					world,
 					lights,
 					rayNo - 1,
-					A2($author$project$RayTracerChallenge$Ray, hit.ar, hit.aN)));
+					A2($author$project$Geometry$rayNewRay, hit.aj, hit.as)));
 			var phongColour = function (light) {
 				var _v0 = A2($author$project$RayTracerChallenge$phongLighting, hit, light);
 				var ambient = _v0.a;
 				var diffuse = _v0.b;
 				var specular = _v0.c;
-				return A3($author$project$RayTracerChallenge$pointInShadow, world, hit.ar, light) ? ambient : A2(
+				return A3($author$project$RayTracerChallenge$pointInShadow, world, hit.aj, light) ? ambient : A2(
 					$author$project$RayTracerChallenge$colourSum,
 					specular,
 					A2($author$project$RayTracerChallenge$colourSum, diffuse, ambient));
@@ -6302,7 +7674,7 @@ var $author$project$RayTracerChallenge$colourAtRay = F4(
 					$author$project$RayTracerChallenge$colourBlack,
 					A2($elm$core$List$map, fn, lights));
 			};
-			if ((0 < hit.e.f.U) && (0 < hit.e.f.ab)) {
+			if ((0 < hit.e.m.u) && (0 < hit.e.m.A)) {
 				var reflectance = $author$project$RayTracerChallenge$schlickReflectance(hit);
 				return A2(
 					$author$project$RayTracerChallenge$colourSum,
@@ -6328,36 +7700,1527 @@ var $author$project$RayTracerChallenge$colourAtRay = F4(
 				$elm$core$Maybe$map,
 				colourAtHit,
 				$author$project$RayTracerChallenge$hitFromIntersections(
-					A2($author$project$RayTracerChallenge$intersectShapesByRay, world.b6, ray)))) : $author$project$RayTracerChallenge$colourBlack;
+					A2($author$project$RayTracerChallenge$intersectAssembly, world, ray)))) : $author$project$RayTracerChallenge$colourBlack;
 	});
+var $author$project$Geometry$matListProduct = A2($elm$core$List$foldl, $author$project$Geometry$matProduct, $author$project$Geometry$matNewIdentity);
+var $author$project$RayTracerChallenge$compileAssembly = function (assembly) {
+	var simplify = function (ass) {
+		_v0$4:
+		while (true) {
+			_v0$11:
+			while (true) {
+				switch (ass.$) {
+					case 0:
+						if (!ass.b.b) {
+							return $author$project$RayTracerChallenge$Empty;
+						} else {
+							if (!ass.b.b.b) {
+								switch (ass.b.a.$) {
+									case 0:
+										var transform2 = ass.a;
+										var _v1 = ass.b;
+										var _v2 = _v1.a;
+										var transform1 = _v2.a;
+										var list = _v2.b;
+										return A2(
+											$author$project$RayTracerChallenge$Group,
+											_Utils_ap(transform1, transform2),
+											list);
+									case 2:
+										var transform2 = ass.a;
+										var _v3 = ass.b;
+										var _v4 = _v3.a;
+										var transform1 = _v4.a;
+										var shape = _v4.b;
+										return A2(
+											$author$project$RayTracerChallenge$Primitive,
+											_Utils_ap(transform1, transform2),
+											shape);
+									case 1:
+										var transform2 = ass.a;
+										var _v5 = ass.b;
+										var _v6 = _v5.a;
+										var transform1 = _v6.a;
+										var op = _v6.b;
+										var l = _v6.c;
+										var r = _v6.d;
+										return A4(
+											$author$project$RayTracerChallenge$CSG,
+											_Utils_ap(transform1, transform2),
+											op,
+											l,
+											r);
+									default:
+										break _v0$4;
+								}
+							} else {
+								break _v0$4;
+							}
+						}
+					case 1:
+						switch (ass.b) {
+							case 0:
+								if (ass.d.$ === 3) {
+									var transform = ass.a;
+									var _v7 = ass.b;
+									var l = ass.c;
+									var _v8 = ass.d;
+									return A2(
+										$author$project$RayTracerChallenge$Group,
+										transform,
+										_List_fromArray(
+											[l]));
+								} else {
+									if (ass.c.$ === 3) {
+										var transform = ass.a;
+										var _v9 = ass.b;
+										var _v10 = ass.c;
+										var r = ass.d;
+										return A2(
+											$author$project$RayTracerChallenge$Group,
+											transform,
+											_List_fromArray(
+												[r]));
+									} else {
+										break _v0$11;
+									}
+								}
+							case 1:
+								if (ass.d.$ === 3) {
+									var _v11 = ass.b;
+									var _v12 = ass.d;
+									return $author$project$RayTracerChallenge$Empty;
+								} else {
+									if (ass.c.$ === 3) {
+										var _v13 = ass.b;
+										var _v14 = ass.c;
+										return $author$project$RayTracerChallenge$Empty;
+									} else {
+										break _v0$11;
+									}
+								}
+							default:
+								if (ass.d.$ === 3) {
+									var transform = ass.a;
+									var _v15 = ass.b;
+									var l = ass.c;
+									var _v16 = ass.d;
+									return A2(
+										$author$project$RayTracerChallenge$Group,
+										transform,
+										_List_fromArray(
+											[l]));
+								} else {
+									if (ass.c.$ === 3) {
+										var _v17 = ass.b;
+										var _v18 = ass.c;
+										return $author$project$RayTracerChallenge$Empty;
+									} else {
+										break _v0$11;
+									}
+								}
+						}
+					case 2:
+						var transform = ass.a;
+						var shape = ass.b;
+						return A2($author$project$RayTracerChallenge$Primitive, transform, shape);
+					default:
+						return $author$project$RayTracerChallenge$Empty;
+				}
+			}
+			var transform = ass.a;
+			var op = ass.b;
+			var l = ass.c;
+			var r = ass.d;
+			return A4(
+				$author$project$RayTracerChallenge$CSG,
+				transform,
+				op,
+				simplify(l),
+				simplify(r));
+		}
+		var transform = ass.a;
+		var list = ass.b;
+		var l = A2(
+			$elm$core$List$filter,
+			$elm$core$Basics$neq($author$project$RayTracerChallenge$Empty),
+			A2($elm$core$List$map, simplify, list));
+		return A2($author$project$RayTracerChallenge$Group, transform, l);
+	};
+	var memoize = F2(
+		function (second, ass) {
+			switch (ass.$) {
+				case 3:
+					return $author$project$RayTracerChallenge$Empty;
+				case 2:
+					var transform = ass.a;
+					var shape = ass.b;
+					return A2(
+						$author$project$RayTracerChallenge$Primitive,
+						transform,
+						_Utils_update(
+							shape,
+							{
+								W: $author$project$Geometry$matInvert(
+									$author$project$Geometry$matListProduct(
+										_Utils_ap(transform, second)))
+							}));
+				case 1:
+					var transform = ass.a;
+					var op = ass.b;
+					var l = ass.c;
+					var r = ass.d;
+					return A4(
+						$author$project$RayTracerChallenge$CSG,
+						transform,
+						op,
+						A2(
+							memoize,
+							_Utils_ap(transform, second),
+							l),
+						A2(
+							memoize,
+							_Utils_ap(transform, second),
+							r));
+				default:
+					var transform = ass.a;
+					var list = ass.b;
+					return A2(
+						$author$project$RayTracerChallenge$Group,
+						transform,
+						A2(
+							$elm$core$List$map,
+							memoize(
+								_Utils_ap(transform, second)),
+							list));
+			}
+		});
+	var label = function (ass) {
+		var assemblyAssignIds = F2(
+			function (nextId, assembly2) {
+				var setId = F2(
+					function (asss, _v26) {
+						var w = _v26.a;
+						var a = _v26.b;
+						return function (_v25) {
+							var ww = _v25.a;
+							var aa = _v25.b;
+							return _Utils_Tuple2(
+								ww,
+								A2($elm$core$List$cons, aa, a));
+						}(
+							A2(assemblyAssignIds, w, asss));
+					});
+				switch (assembly2.$) {
+					case 2:
+						var t = assembly2.a;
+						var shape = assembly2.b;
+						return _Utils_Tuple2(
+							nextId + 1,
+							A2(
+								$author$project$RayTracerChallenge$Primitive,
+								t,
+								_Utils_update(
+									shape,
+									{J: nextId})));
+					case 0:
+						var transform = assembly2.a;
+						var list = assembly2.b;
+						return function (_v21) {
+							var w = _v21.a;
+							var a = _v21.b;
+							return _Utils_Tuple2(
+								w,
+								A2($author$project$RayTracerChallenge$Group, transform, a));
+						}(
+							A3(
+								$elm$core$List$foldr,
+								setId,
+								_Utils_Tuple2(nextId, _List_Nil),
+								list));
+					case 1:
+						var t = assembly2.a;
+						var op = assembly2.b;
+						var left = assembly2.c;
+						var right = assembly2.d;
+						return function (_v22) {
+							var w = _v22.a;
+							var a = _v22.b;
+							if ((a.b && a.b.b) && (!a.b.b.b)) {
+								var l = a.a;
+								var _v24 = a.b;
+								var r = _v24.a;
+								return _Utils_Tuple2(
+									w,
+									A4($author$project$RayTracerChallenge$CSG, t, op, l, r));
+							} else {
+								return _Utils_Tuple2(nextId, $author$project$RayTracerChallenge$Empty);
+							}
+						}(
+							A3(
+								$elm$core$List$foldr,
+								setId,
+								_Utils_Tuple2(nextId, _List_Nil),
+								_List_fromArray(
+									[left, right])));
+					default:
+						return _Utils_Tuple2(nextId, $author$project$RayTracerChallenge$Empty);
+				}
+			});
+		var _v27 = A2(assemblyAssignIds, 1, ass);
+		var numberedAssembly = _v27.b;
+		return numberedAssembly;
+	};
+	return label(
+		A2(
+			memoize,
+			_List_Nil,
+			simplify(
+				simplify(
+					simplify(
+						simplify(
+							simplify(
+								simplify(
+									simplify(
+										simplify(
+											simplify(
+												simplify(
+													simplify(assembly)))))))))))));
+};
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$RayTracerChallenge$imageRender = function (_v0) {
-	var world = _v0.aS;
-	var lights = _v0.aG;
-	var camera = _v0.ay;
+	var assembly = _v0.au;
+	var lights = _v0.aN;
+	var camera = _v0.ax;
 	var pixelAtIndex = function (index) {
 		return {
-			t: A2($elm$core$Basics$modBy, camera.aE, index),
-			u: (index / camera.aE) | 0
+			a1: A2($elm$core$Basics$modBy, camera.aM, index),
+			a2: (index / camera.aM) | 0
 		};
 	};
 	var colourAtIndex = function (index) {
 		return A4(
 			$author$project$RayTracerChallenge$colourAtRay,
-			world,
+			$author$project$RayTracerChallenge$compileAssembly(assembly),
 			lights,
-			camera.aH,
+			camera.aO,
 			A2(
 				$author$project$RayTracerChallenge$cameraRayForPixel,
 				camera,
 				pixelAtIndex(index)));
 	};
 	return {
-		bX: A2($elm$core$Array$initialize, camera.aE * camera.aD, colourAtIndex),
-		b$: camera.aD,
-		cf: camera.aE
+		bP: A2($elm$core$Array$initialize, camera.aM * camera.aL, colourAtIndex),
+		bT: camera.aL,
+		b9: camera.aM
 	};
 };
+var $author$project$RayTracerDsl$render = $author$project$RayTracerChallenge$imageRender;
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Geometry$SmoothTriangle = function (a) {
+	return {$: 6, a: a};
+};
+var $author$project$RayTracerChallenge$defaultTriangle = function () {
+	var config = {
+		G: A3($author$project$Geometry$pntNewPoint, 0, 0, 0),
+		av: A3($author$project$Geometry$pntNewPoint, 1, 0, 0),
+		aw: A3($author$project$Geometry$pntNewPoint, 0, 1, 0)
+	};
+	return {
+		S: $author$project$Geometry$shpNewShape(
+			$author$project$Geometry$Triangle(config)),
+		J: 0,
+		m: $author$project$RayTracerChallenge$defaultMaterial,
+		W: $author$project$Geometry$matNewIdentity
+	};
+}();
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{i: nodeList, f: nodeListSize, h: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (!_v0.$) {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $author$project$Geometry$vecNewVector = F3(
+	function (dx, dy, dz) {
+		return A3($author$project$Geometry$Vector, dx, dy, dz);
+	});
+var $author$project$RayTracerChallenge$objToAssembly = function (objList) {
+	var vertexToPoint = function (obj) {
+		if (((((!obj.$) && obj.a.b) && obj.a.b.b) && obj.a.b.b.b) && (!obj.a.b.b.b.b)) {
+			var _v27 = obj.a;
+			var x = _v27.a;
+			var _v28 = _v27.b;
+			var y = _v28.a;
+			var _v29 = _v28.b;
+			var z = _v29.a;
+			return $elm$core$Maybe$Just(
+				A3($author$project$Geometry$pntNewPoint, x, y, z));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	var vertices = $elm$core$Array$fromList(
+		A2(
+			$elm$core$List$map,
+			$elm$core$Maybe$withDefault(
+				A3($author$project$Geometry$pntNewPoint, 0, 0, 0)),
+			A2(
+				$elm$core$List$filter,
+				$elm$core$Basics$neq($elm$core$Maybe$Nothing),
+				A2($elm$core$List$map, vertexToPoint, objList))));
+	var vertexNormalToVector = function (obj) {
+		if (((((obj.$ === 1) && obj.a.b) && obj.a.b.b) && obj.a.b.b.b) && (!obj.a.b.b.b.b)) {
+			var _v23 = obj.a;
+			var dx = _v23.a;
+			var _v24 = _v23.b;
+			var dy = _v24.a;
+			var _v25 = _v24.b;
+			var dz = _v25.a;
+			return $elm$core$Maybe$Just(
+				A3($author$project$Geometry$vecNewVector, dx, dy, dz));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	var vertexNormals = $elm$core$Array$fromList(
+		A2(
+			$elm$core$List$map,
+			$elm$core$Maybe$withDefault(
+				A3($author$project$Geometry$vecNewUnit, 0, 1, 0)),
+			A2(
+				$elm$core$List$filter,
+				$elm$core$Basics$neq($elm$core$Maybe$Nothing),
+				A2($elm$core$List$map, vertexNormalToVector, objList))));
+	var faceToTriangle = function (obj) {
+		var triangle = function (config) {
+			return $elm$core$Maybe$Just(
+				A2(
+					$author$project$RayTracerChallenge$Primitive,
+					_List_Nil,
+					_Utils_update(
+						$author$project$RayTracerChallenge$defaultTriangle,
+						{
+							S: $author$project$Geometry$shpNewShape(
+								$author$project$Geometry$Triangle(config))
+						})));
+		};
+		var smoothTriangle = function (config) {
+			return $elm$core$Maybe$Just(
+				A2(
+					$author$project$RayTracerChallenge$Primitive,
+					_List_Nil,
+					_Utils_update(
+						$author$project$RayTracerChallenge$defaultTriangle,
+						{
+							S: $author$project$Geometry$shpNewShape(
+								$author$project$Geometry$SmoothTriangle(config))
+						})));
+		};
+		var faceVertex = function (x) {
+			_v18$3:
+			while (true) {
+				if (x.b && (!x.a.$)) {
+					if (x.b.b) {
+						if (x.b.b.b) {
+							if ((!x.b.b.a.$) && (!x.b.b.b.b)) {
+								var a = x.a.a;
+								var _v19 = x.b;
+								var _v20 = _v19.b;
+								var c = _v20.a.a;
+								return _Utils_Tuple2(
+									A2($elm$core$Array$get, a - 1, vertices),
+									A2($elm$core$Array$get, c - 1, vertexNormals));
+							} else {
+								break _v18$3;
+							}
+						} else {
+							var a = x.a.a;
+							var _v21 = x.b;
+							return _Utils_Tuple2(
+								A2($elm$core$Array$get, a - 1, vertices),
+								$elm$core$Maybe$Nothing);
+						}
+					} else {
+						var a = x.a.a;
+						return _Utils_Tuple2(
+							A2($elm$core$Array$get, a - 1, vertices),
+							$elm$core$Maybe$Nothing);
+					}
+				} else {
+					break _v18$3;
+				}
+			}
+			return _Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing);
+		};
+		var faceToShape = function (x) {
+			var makeTri = function (lst) {
+				_v4$2:
+				while (true) {
+					if (lst.b && (!lst.a.a.$)) {
+						if (lst.a.b.$ === 1) {
+							if ((((((lst.b.b && (!lst.b.a.a.$)) && (lst.b.a.b.$ === 1)) && lst.b.b.b) && (!lst.b.b.a.a.$)) && (lst.b.b.a.b.$ === 1)) && (!lst.b.b.b.b)) {
+								var _v5 = lst.a;
+								var p1 = _v5.a.a;
+								var _v6 = _v5.b;
+								var _v7 = lst.b;
+								var _v8 = _v7.a;
+								var p2 = _v8.a.a;
+								var _v9 = _v8.b;
+								var _v10 = _v7.b;
+								var _v11 = _v10.a;
+								var p3 = _v11.a.a;
+								var _v12 = _v11.b;
+								return triangle(
+									{G: p1, av: p2, aw: p3});
+							} else {
+								break _v4$2;
+							}
+						} else {
+							if ((((((lst.b.b && (!lst.b.a.a.$)) && (!lst.b.a.b.$)) && lst.b.b.b) && (!lst.b.b.a.a.$)) && (!lst.b.b.a.b.$)) && (!lst.b.b.b.b)) {
+								var _v13 = lst.a;
+								var p1 = _v13.a.a;
+								var v1 = _v13.b.a;
+								var _v14 = lst.b;
+								var _v15 = _v14.a;
+								var p2 = _v15.a.a;
+								var v2 = _v15.b.a;
+								var _v16 = _v14.b;
+								var _v17 = _v16.a;
+								var p3 = _v17.a.a;
+								var v3 = _v17.b.a;
+								return smoothTriangle(
+									{G: p1, av: p2, aw: p3, bY: v1, b_: v2, b$: v3});
+							} else {
+								break _v4$2;
+							}
+						}
+					} else {
+						break _v4$2;
+					}
+				}
+				return $elm$core$Maybe$Nothing;
+			};
+			var makeAllTri = function (lst) {
+				if ((lst.b && lst.b.b) && lst.b.b.b) {
+					var a = lst.a;
+					var _v2 = lst.b;
+					var b = _v2.a;
+					var _v3 = _v2.b;
+					var c = _v3.a;
+					var rest = _v3.b;
+					return A2(
+						$elm$core$Maybe$map,
+						function (s) {
+							return A2(
+								$elm$core$List$cons,
+								s,
+								A2(
+									$elm$core$Maybe$withDefault,
+									_List_Nil,
+									makeAllTri(
+										A2(
+											$elm$core$List$cons,
+											a,
+											A2($elm$core$List$cons, c, rest)))));
+						},
+						makeTri(
+							_List_fromArray(
+								[a, b, c])));
+				} else {
+					return $elm$core$Maybe$Nothing;
+				}
+			};
+			return A2(
+				$elm$core$Maybe$map,
+				$author$project$RayTracerChallenge$Group(_List_Nil),
+				makeAllTri(
+					A2($elm$core$List$map, faceVertex, x)));
+		};
+		if (obj.$ === 2) {
+			var lst = obj.a;
+			return faceToShape(lst);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$author$project$RayTracerChallenge$Group,
+		_List_Nil,
+		A2(
+			$elm$core$List$map,
+			$elm$core$Maybe$withDefault(
+				A2($author$project$RayTracerChallenge$Primitive, _List_Nil, $author$project$RayTracerChallenge$defaultTriangle)),
+			A2(
+				$elm$core$List$filter,
+				$elm$core$Basics$neq($elm$core$Maybe$Nothing),
+				A2($elm$core$List$map, faceToTriangle, objList))));
+};
+var $elm$parser$Parser$Done = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$ObjParser$Face = function (a) {
+	return {$: 2, a: a};
+};
+var $elm$parser$Parser$Loop = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$ObjParser$Vertex = function (a) {
+	return {$: 0, a: a};
+};
+var $author$project$ObjParser$VertexNormal = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$parser$Parser$UnexpectedChar = {$: 11};
+var $elm$parser$Parser$Advanced$Bad = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var $elm$parser$Parser$Advanced$Good = F3(
+	function (a, b, c) {
+		return {$: 0, a: a, b: b, c: c};
+	});
+var $elm$parser$Parser$Advanced$Parser = $elm$core$Basics$identity;
+var $elm$parser$Parser$Advanced$AddRight = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var $elm$parser$Parser$Advanced$DeadEnd = F4(
+	function (row, col, problem, contextStack) {
+		return {a7: col, bO: contextStack, bu: problem, bC: row};
+	});
+var $elm$parser$Parser$Advanced$Empty = {$: 0};
+var $elm$parser$Parser$Advanced$fromState = F2(
+	function (s, x) {
+		return A2(
+			$elm$parser$Parser$Advanced$AddRight,
+			$elm$parser$Parser$Advanced$Empty,
+			A4($elm$parser$Parser$Advanced$DeadEnd, s.bC, s.a7, x, s.c));
+	});
+var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
+var $elm$parser$Parser$Advanced$chompIf = F2(
+	function (isGood, expecting) {
+		return function (s) {
+			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, s.b, s.a);
+			return _Utils_eq(newOffset, -1) ? A2(
+				$elm$parser$Parser$Advanced$Bad,
+				false,
+				A2($elm$parser$Parser$Advanced$fromState, s, expecting)) : (_Utils_eq(newOffset, -2) ? A3(
+				$elm$parser$Parser$Advanced$Good,
+				true,
+				0,
+				{a7: 1, c: s.c, d: s.d, b: s.b + 1, bC: s.bC + 1, a: s.a}) : A3(
+				$elm$parser$Parser$Advanced$Good,
+				true,
+				0,
+				{a7: s.a7 + 1, c: s.c, d: s.d, b: newOffset, bC: s.bC, a: s.a}));
+		};
+	});
+var $elm$parser$Parser$chompIf = function (isGood) {
+	return A2($elm$parser$Parser$Advanced$chompIf, isGood, $elm$parser$Parser$UnexpectedChar);
+};
+var $elm$parser$Parser$Advanced$chompUntilEndOr = function (str) {
+	return function (s) {
+		var _v0 = A5(_Parser_findSubString, str, s.b, s.bC, s.a7, s.a);
+		var newOffset = _v0.a;
+		var newRow = _v0.b;
+		var newCol = _v0.c;
+		var adjustedOffset = (newOffset < 0) ? $elm$core$String$length(s.a) : newOffset;
+		return A3(
+			$elm$parser$Parser$Advanced$Good,
+			_Utils_cmp(s.b, adjustedOffset) < 0,
+			0,
+			{a7: newCol, c: s.c, d: s.d, b: adjustedOffset, bC: newRow, a: s.a});
+	};
+};
+var $elm$parser$Parser$chompUntilEndOr = $elm$parser$Parser$Advanced$chompUntilEndOr;
+var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
+	function (isGood, offset, row, col, s0) {
+		chompWhileHelp:
+		while (true) {
+			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, offset, s0.a);
+			if (_Utils_eq(newOffset, -1)) {
+				return A3(
+					$elm$parser$Parser$Advanced$Good,
+					_Utils_cmp(s0.b, offset) < 0,
+					0,
+					{a7: col, c: s0.c, d: s0.d, b: offset, bC: row, a: s0.a});
+			} else {
+				if (_Utils_eq(newOffset, -2)) {
+					var $temp$isGood = isGood,
+						$temp$offset = offset + 1,
+						$temp$row = row + 1,
+						$temp$col = 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				} else {
+					var $temp$isGood = isGood,
+						$temp$offset = newOffset,
+						$temp$row = row,
+						$temp$col = col + 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				}
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$chompWhile = function (isGood) {
+	return function (s) {
+		return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.b, s.bC, s.a7, s);
+	};
+};
+var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
+var $elm$parser$Parser$ExpectingEnd = {$: 10};
+var $elm$parser$Parser$Advanced$end = function (x) {
+	return function (s) {
+		return _Utils_eq(
+			$elm$core$String$length(s.a),
+			s.b) ? A3($elm$parser$Parser$Advanced$Good, false, 0, s) : A2(
+			$elm$parser$Parser$Advanced$Bad,
+			false,
+			A2($elm$parser$Parser$Advanced$fromState, s, x));
+	};
+};
+var $elm$parser$Parser$end = $elm$parser$Parser$Advanced$end($elm$parser$Parser$ExpectingEnd);
+var $elm$parser$Parser$Advanced$map2 = F3(
+	function (func, _v0, _v1) {
+		var parseA = _v0;
+		var parseB = _v1;
+		return function (s0) {
+			var _v2 = parseA(s0);
+			if (_v2.$ === 1) {
+				var p = _v2.a;
+				var x = _v2.b;
+				return A2($elm$parser$Parser$Advanced$Bad, p, x);
+			} else {
+				var p1 = _v2.a;
+				var a = _v2.b;
+				var s1 = _v2.c;
+				var _v3 = parseB(s1);
+				if (_v3.$ === 1) {
+					var p2 = _v3.a;
+					var x = _v3.b;
+					return A2($elm$parser$Parser$Advanced$Bad, p1 || p2, x);
+				} else {
+					var p2 = _v3.a;
+					var b = _v3.b;
+					var s2 = _v3.c;
+					return A3(
+						$elm$parser$Parser$Advanced$Good,
+						p1 || p2,
+						A2(func, a, b),
+						s2);
+				}
+			}
+		};
+	});
+var $elm$parser$Parser$Advanced$ignorer = F2(
+	function (keepParser, ignoreParser) {
+		return A3($elm$parser$Parser$Advanced$map2, $elm$core$Basics$always, keepParser, ignoreParser);
+	});
+var $elm$parser$Parser$ignorer = $elm$parser$Parser$Advanced$ignorer;
+var $elm$parser$Parser$Advanced$loopHelp = F4(
+	function (p, state, callback, s0) {
+		loopHelp:
+		while (true) {
+			var _v0 = callback(state);
+			var parse = _v0;
+			var _v1 = parse(s0);
+			if (!_v1.$) {
+				var p1 = _v1.a;
+				var step = _v1.b;
+				var s1 = _v1.c;
+				if (!step.$) {
+					var newState = step.a;
+					var $temp$p = p || p1,
+						$temp$state = newState,
+						$temp$callback = callback,
+						$temp$s0 = s1;
+					p = $temp$p;
+					state = $temp$state;
+					callback = $temp$callback;
+					s0 = $temp$s0;
+					continue loopHelp;
+				} else {
+					var result = step.a;
+					return A3($elm$parser$Parser$Advanced$Good, p || p1, result, s1);
+				}
+			} else {
+				var p1 = _v1.a;
+				var x = _v1.b;
+				return A2($elm$parser$Parser$Advanced$Bad, p || p1, x);
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$loop = F2(
+	function (state, callback) {
+		return function (s) {
+			return A4($elm$parser$Parser$Advanced$loopHelp, false, state, callback, s);
+		};
+	});
+var $elm$parser$Parser$Advanced$map = F2(
+	function (func, _v0) {
+		var parse = _v0;
+		return function (s0) {
+			var _v1 = parse(s0);
+			if (!_v1.$) {
+				var p = _v1.a;
+				var a = _v1.b;
+				var s1 = _v1.c;
+				return A3(
+					$elm$parser$Parser$Advanced$Good,
+					p,
+					func(a),
+					s1);
+			} else {
+				var p = _v1.a;
+				var x = _v1.b;
+				return A2($elm$parser$Parser$Advanced$Bad, p, x);
+			}
+		};
+	});
+var $elm$parser$Parser$map = $elm$parser$Parser$Advanced$map;
+var $elm$parser$Parser$Advanced$Done = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$parser$Parser$Advanced$Loop = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$parser$Parser$toAdvancedStep = function (step) {
+	if (!step.$) {
+		var s = step.a;
+		return $elm$parser$Parser$Advanced$Loop(s);
+	} else {
+		var a = step.a;
+		return $elm$parser$Parser$Advanced$Done(a);
+	}
+};
+var $elm$parser$Parser$loop = F2(
+	function (state, callback) {
+		return A2(
+			$elm$parser$Parser$Advanced$loop,
+			state,
+			function (s) {
+				return A2(
+					$elm$parser$Parser$map,
+					$elm$parser$Parser$toAdvancedStep,
+					callback(s));
+			});
+	});
+var $elm$parser$Parser$Advanced$Append = F2(
+	function (a, b) {
+		return {$: 2, a: a, b: b};
+	});
+var $elm$parser$Parser$Advanced$oneOfHelp = F3(
+	function (s0, bag, parsers) {
+		oneOfHelp:
+		while (true) {
+			if (!parsers.b) {
+				return A2($elm$parser$Parser$Advanced$Bad, false, bag);
+			} else {
+				var parse = parsers.a;
+				var remainingParsers = parsers.b;
+				var _v1 = parse(s0);
+				if (!_v1.$) {
+					var step = _v1;
+					return step;
+				} else {
+					var step = _v1;
+					var p = step.a;
+					var x = step.b;
+					if (p) {
+						return step;
+					} else {
+						var $temp$s0 = s0,
+							$temp$bag = A2($elm$parser$Parser$Advanced$Append, bag, x),
+							$temp$parsers = remainingParsers;
+						s0 = $temp$s0;
+						bag = $temp$bag;
+						parsers = $temp$parsers;
+						continue oneOfHelp;
+					}
+				}
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$oneOf = function (parsers) {
+	return function (s) {
+		return A3($elm$parser$Parser$Advanced$oneOfHelp, s, $elm$parser$Parser$Advanced$Empty, parsers);
+	};
+};
+var $elm$parser$Parser$oneOf = $elm$parser$Parser$Advanced$oneOf;
+var $elm$parser$Parser$ExpectingInt = {$: 1};
+var $elm$parser$Parser$Advanced$consumeBase = _Parser_consumeBase;
+var $elm$parser$Parser$Advanced$consumeBase16 = _Parser_consumeBase16;
+var $elm$parser$Parser$Advanced$bumpOffset = F2(
+	function (newOffset, s) {
+		return {a7: s.a7 + (newOffset - s.b), c: s.c, d: s.d, b: newOffset, bC: s.bC, a: s.a};
+	});
+var $elm$parser$Parser$Advanced$chompBase10 = _Parser_chompBase10;
+var $elm$parser$Parser$Advanced$isAsciiCode = _Parser_isAsciiCode;
+var $elm$parser$Parser$Advanced$consumeExp = F2(
+	function (offset, src) {
+		if (A3($elm$parser$Parser$Advanced$isAsciiCode, 101, offset, src) || A3($elm$parser$Parser$Advanced$isAsciiCode, 69, offset, src)) {
+			var eOffset = offset + 1;
+			var expOffset = (A3($elm$parser$Parser$Advanced$isAsciiCode, 43, eOffset, src) || A3($elm$parser$Parser$Advanced$isAsciiCode, 45, eOffset, src)) ? (eOffset + 1) : eOffset;
+			var newOffset = A2($elm$parser$Parser$Advanced$chompBase10, expOffset, src);
+			return _Utils_eq(expOffset, newOffset) ? (-newOffset) : newOffset;
+		} else {
+			return offset;
+		}
+	});
+var $elm$parser$Parser$Advanced$consumeDotAndExp = F2(
+	function (offset, src) {
+		return A3($elm$parser$Parser$Advanced$isAsciiCode, 46, offset, src) ? A2(
+			$elm$parser$Parser$Advanced$consumeExp,
+			A2($elm$parser$Parser$Advanced$chompBase10, offset + 1, src),
+			src) : A2($elm$parser$Parser$Advanced$consumeExp, offset, src);
+	});
+var $elm$parser$Parser$Advanced$finalizeInt = F5(
+	function (invalid, handler, startOffset, _v0, s) {
+		var endOffset = _v0.a;
+		var n = _v0.b;
+		if (handler.$ === 1) {
+			var x = handler.a;
+			return A2(
+				$elm$parser$Parser$Advanced$Bad,
+				true,
+				A2($elm$parser$Parser$Advanced$fromState, s, x));
+		} else {
+			var toValue = handler.a;
+			return _Utils_eq(startOffset, endOffset) ? A2(
+				$elm$parser$Parser$Advanced$Bad,
+				_Utils_cmp(s.b, startOffset) < 0,
+				A2($elm$parser$Parser$Advanced$fromState, s, invalid)) : A3(
+				$elm$parser$Parser$Advanced$Good,
+				true,
+				toValue(n),
+				A2($elm$parser$Parser$Advanced$bumpOffset, endOffset, s));
+		}
+	});
+var $elm$parser$Parser$Advanced$fromInfo = F4(
+	function (row, col, x, context) {
+		return A2(
+			$elm$parser$Parser$Advanced$AddRight,
+			$elm$parser$Parser$Advanced$Empty,
+			A4($elm$parser$Parser$Advanced$DeadEnd, row, col, x, context));
+	});
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$parser$Parser$Advanced$finalizeFloat = F6(
+	function (invalid, expecting, intSettings, floatSettings, intPair, s) {
+		var intOffset = intPair.a;
+		var floatOffset = A2($elm$parser$Parser$Advanced$consumeDotAndExp, intOffset, s.a);
+		if (floatOffset < 0) {
+			return A2(
+				$elm$parser$Parser$Advanced$Bad,
+				true,
+				A4($elm$parser$Parser$Advanced$fromInfo, s.bC, s.a7 - (floatOffset + s.b), invalid, s.c));
+		} else {
+			if (_Utils_eq(s.b, floatOffset)) {
+				return A2(
+					$elm$parser$Parser$Advanced$Bad,
+					false,
+					A2($elm$parser$Parser$Advanced$fromState, s, expecting));
+			} else {
+				if (_Utils_eq(intOffset, floatOffset)) {
+					return A5($elm$parser$Parser$Advanced$finalizeInt, invalid, intSettings, s.b, intPair, s);
+				} else {
+					if (floatSettings.$ === 1) {
+						var x = floatSettings.a;
+						return A2(
+							$elm$parser$Parser$Advanced$Bad,
+							true,
+							A2($elm$parser$Parser$Advanced$fromState, s, invalid));
+					} else {
+						var toValue = floatSettings.a;
+						var _v1 = $elm$core$String$toFloat(
+							A3($elm$core$String$slice, s.b, floatOffset, s.a));
+						if (_v1.$ === 1) {
+							return A2(
+								$elm$parser$Parser$Advanced$Bad,
+								true,
+								A2($elm$parser$Parser$Advanced$fromState, s, invalid));
+						} else {
+							var n = _v1.a;
+							return A3(
+								$elm$parser$Parser$Advanced$Good,
+								true,
+								toValue(n),
+								A2($elm$parser$Parser$Advanced$bumpOffset, floatOffset, s));
+						}
+					}
+				}
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$number = function (c) {
+	return function (s) {
+		if (A3($elm$parser$Parser$Advanced$isAsciiCode, 48, s.b, s.a)) {
+			var zeroOffset = s.b + 1;
+			var baseOffset = zeroOffset + 1;
+			return A3($elm$parser$Parser$Advanced$isAsciiCode, 120, zeroOffset, s.a) ? A5(
+				$elm$parser$Parser$Advanced$finalizeInt,
+				c.bX,
+				c.bg,
+				baseOffset,
+				A2($elm$parser$Parser$Advanced$consumeBase16, baseOffset, s.a),
+				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 111, zeroOffset, s.a) ? A5(
+				$elm$parser$Parser$Advanced$finalizeInt,
+				c.bX,
+				c.bq,
+				baseOffset,
+				A3($elm$parser$Parser$Advanced$consumeBase, 8, baseOffset, s.a),
+				s) : (A3($elm$parser$Parser$Advanced$isAsciiCode, 98, zeroOffset, s.a) ? A5(
+				$elm$parser$Parser$Advanced$finalizeInt,
+				c.bX,
+				c.a4,
+				baseOffset,
+				A3($elm$parser$Parser$Advanced$consumeBase, 2, baseOffset, s.a),
+				s) : A6(
+				$elm$parser$Parser$Advanced$finalizeFloat,
+				c.bX,
+				c.bd,
+				c.bk,
+				c.be,
+				_Utils_Tuple2(zeroOffset, 0),
+				s)));
+		} else {
+			return A6(
+				$elm$parser$Parser$Advanced$finalizeFloat,
+				c.bX,
+				c.bd,
+				c.bk,
+				c.be,
+				A3($elm$parser$Parser$Advanced$consumeBase, 10, s.b, s.a),
+				s);
+		}
+	};
+};
+var $elm$parser$Parser$Advanced$int = F2(
+	function (expecting, invalid) {
+		return $elm$parser$Parser$Advanced$number(
+			{
+				a4: $elm$core$Result$Err(invalid),
+				bd: expecting,
+				be: $elm$core$Result$Err(invalid),
+				bg: $elm$core$Result$Err(invalid),
+				bk: $elm$core$Result$Ok($elm$core$Basics$identity),
+				bX: invalid,
+				bq: $elm$core$Result$Err(invalid)
+			});
+	});
+var $elm$parser$Parser$int = A2($elm$parser$Parser$Advanced$int, $elm$parser$Parser$ExpectingInt, $elm$parser$Parser$ExpectingInt);
+var $elm$parser$Parser$Advanced$keeper = F2(
+	function (parseFunc, parseArg) {
+		return A3($elm$parser$Parser$Advanced$map2, $elm$core$Basics$apL, parseFunc, parseArg);
+	});
+var $elm$parser$Parser$keeper = $elm$parser$Parser$Advanced$keeper;
+var $elm$parser$Parser$ExpectingKeyword = function (a) {
+	return {$: 9, a: a};
+};
+var $elm$parser$Parser$Advanced$Token = F2(
+	function (a, b) {
+		return {$: 0, a: a, b: b};
+	});
+var $elm$parser$Parser$Advanced$isSubString = _Parser_isSubString;
+var $elm$parser$Parser$Advanced$keyword = function (_v0) {
+	var kwd = _v0.a;
+	var expecting = _v0.b;
+	var progress = !$elm$core$String$isEmpty(kwd);
+	return function (s) {
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, kwd, s.b, s.bC, s.a7, s.a);
+		var newOffset = _v1.a;
+		var newRow = _v1.b;
+		var newCol = _v1.c;
+		return (_Utils_eq(newOffset, -1) || (0 <= A3(
+			$elm$parser$Parser$Advanced$isSubChar,
+			function (c) {
+				return $elm$core$Char$isAlphaNum(c) || (c === '_');
+			},
+			newOffset,
+			s.a))) ? A2(
+			$elm$parser$Parser$Advanced$Bad,
+			false,
+			A2($elm$parser$Parser$Advanced$fromState, s, expecting)) : A3(
+			$elm$parser$Parser$Advanced$Good,
+			progress,
+			0,
+			{a7: newCol, c: s.c, d: s.d, b: newOffset, bC: newRow, a: s.a});
+	};
+};
+var $elm$parser$Parser$keyword = function (kwd) {
+	return $elm$parser$Parser$Advanced$keyword(
+		A2(
+			$elm$parser$Parser$Advanced$Token,
+			kwd,
+			$elm$parser$Parser$ExpectingKeyword(kwd)));
+};
+var $elm$parser$Parser$Advanced$spaces = $elm$parser$Parser$Advanced$chompWhile(
+	function (c) {
+		return (c === ' ') || ((c === '\n') || (c === '\r'));
+	});
+var $elm$parser$Parser$spaces = $elm$parser$Parser$Advanced$spaces;
+var $elm$parser$Parser$Advanced$succeed = function (a) {
+	return function (s) {
+		return A3($elm$parser$Parser$Advanced$Good, false, a, s);
+	};
+};
+var $elm$parser$Parser$succeed = $elm$parser$Parser$Advanced$succeed;
+var $elm$parser$Parser$Expecting = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$parser$Parser$toToken = function (str) {
+	return A2(
+		$elm$parser$Parser$Advanced$Token,
+		str,
+		$elm$parser$Parser$Expecting(str));
+};
+var $elm$parser$Parser$Advanced$token = function (_v0) {
+	var str = _v0.a;
+	var expecting = _v0.b;
+	var progress = !$elm$core$String$isEmpty(str);
+	return function (s) {
+		var _v1 = A5($elm$parser$Parser$Advanced$isSubString, str, s.b, s.bC, s.a7, s.a);
+		var newOffset = _v1.a;
+		var newRow = _v1.b;
+		var newCol = _v1.c;
+		return _Utils_eq(newOffset, -1) ? A2(
+			$elm$parser$Parser$Advanced$Bad,
+			false,
+			A2($elm$parser$Parser$Advanced$fromState, s, expecting)) : A3(
+			$elm$parser$Parser$Advanced$Good,
+			progress,
+			0,
+			{a7: newCol, c: s.c, d: s.d, b: newOffset, bC: newRow, a: s.a});
+	};
+};
+var $elm$parser$Parser$token = function (str) {
+	return $elm$parser$Parser$Advanced$token(
+		$elm$parser$Parser$toToken(str));
+};
+var $author$project$ObjParser$parseFace = F2(
+	function (ctor, tag) {
+		var vertices = A2(
+			$elm$parser$Parser$loop,
+			_List_Nil,
+			function (lst) {
+				return $elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							A2(
+							$elm$parser$Parser$map,
+							function (v) {
+								return $elm$parser$Parser$Loop(
+									A2(
+										$elm$core$List$cons,
+										$elm$core$Maybe$Just(v),
+										lst));
+							},
+							$elm$parser$Parser$int),
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Loop(
+									A2($elm$core$List$cons, $elm$core$Maybe$Nothing, lst))),
+							$elm$parser$Parser$token('//')),
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Loop(lst)),
+							$elm$parser$Parser$token('/')),
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Done(
+									$elm$core$List$reverse(lst))),
+							$elm$parser$Parser$succeed(0))
+						]));
+			});
+		var faces = A2(
+			$elm$parser$Parser$loop,
+			_List_Nil,
+			function (lst) {
+				return $elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Loop(lst)),
+							A2(
+								$elm$parser$Parser$ignorer,
+								$elm$parser$Parser$chompIf(
+									$elm$core$Basics$eq(' ')),
+								$elm$parser$Parser$chompWhile(
+									$elm$core$Basics$eq(' ')))),
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Done(
+									$elm$core$List$reverse(lst))),
+							$elm$parser$Parser$oneOf(
+								_List_fromArray(
+									[
+										$elm$parser$Parser$end,
+										$elm$parser$Parser$token('\n')
+									]))),
+							A2(
+							$elm$parser$Parser$map,
+							function (v) {
+								return $elm$parser$Parser$Loop(
+									A2($elm$core$List$cons, v, lst));
+							},
+							vertices)
+						]));
+			});
+		return A2(
+			$elm$parser$Parser$keeper,
+			A2(
+				$elm$parser$Parser$ignorer,
+				A2(
+					$elm$parser$Parser$ignorer,
+					$elm$parser$Parser$succeed(ctor),
+					$elm$parser$Parser$keyword(tag)),
+				$elm$parser$Parser$spaces),
+			faces);
+	});
+var $elm$parser$Parser$ExpectingFloat = {$: 5};
+var $elm$parser$Parser$Advanced$float = F2(
+	function (expecting, invalid) {
+		return $elm$parser$Parser$Advanced$number(
+			{
+				a4: $elm$core$Result$Err(invalid),
+				bd: expecting,
+				be: $elm$core$Result$Ok($elm$core$Basics$identity),
+				bg: $elm$core$Result$Err(invalid),
+				bk: $elm$core$Result$Ok($elm$core$Basics$toFloat),
+				bX: invalid,
+				bq: $elm$core$Result$Err(invalid)
+			});
+	});
+var $elm$parser$Parser$float = A2($elm$parser$Parser$Advanced$float, $elm$parser$Parser$ExpectingFloat, $elm$parser$Parser$ExpectingFloat);
+var $elm$parser$Parser$ExpectingSymbol = function (a) {
+	return {$: 8, a: a};
+};
+var $elm$parser$Parser$Advanced$symbol = $elm$parser$Parser$Advanced$token;
+var $elm$parser$Parser$symbol = function (str) {
+	return $elm$parser$Parser$Advanced$symbol(
+		A2(
+			$elm$parser$Parser$Advanced$Token,
+			str,
+			$elm$parser$Parser$ExpectingSymbol(str)));
+};
+var $author$project$ObjParser$parseFloats = F2(
+	function (ctor, tag) {
+		var negfloat = $elm$parser$Parser$oneOf(
+			_List_fromArray(
+				[
+					A2(
+					$elm$parser$Parser$keeper,
+					A2(
+						$elm$parser$Parser$ignorer,
+						$elm$parser$Parser$succeed($elm$core$Basics$negate),
+						$elm$parser$Parser$symbol('-')),
+					$elm$parser$Parser$float),
+					$elm$parser$Parser$float
+				]));
+		var floats = A2(
+			$elm$parser$Parser$loop,
+			_List_Nil,
+			function (lst) {
+				return $elm$parser$Parser$oneOf(
+					_List_fromArray(
+						[
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Loop(lst)),
+							A2(
+								$elm$parser$Parser$ignorer,
+								$elm$parser$Parser$chompIf(
+									$elm$core$Basics$eq(' ')),
+								$elm$parser$Parser$chompWhile(
+									$elm$core$Basics$eq(' ')))),
+							A2(
+							$elm$parser$Parser$map,
+							function (v) {
+								return $elm$parser$Parser$Loop(
+									A2($elm$core$List$cons, v, lst));
+							},
+							negfloat),
+							A2(
+							$elm$parser$Parser$map,
+							$elm$core$Basics$always(
+								$elm$parser$Parser$Done(
+									$elm$core$List$reverse(lst))),
+							$elm$parser$Parser$succeed(0))
+						]));
+			});
+		return A2(
+			$elm$parser$Parser$keeper,
+			A2(
+				$elm$parser$Parser$ignorer,
+				$elm$parser$Parser$succeed(ctor),
+				$elm$parser$Parser$keyword(tag)),
+			floats);
+	});
+var $author$project$ObjParser$parseObj = function () {
+	var junk = $elm$parser$Parser$oneOf(
+		_List_fromArray(
+			[
+				A2(
+				$elm$parser$Parser$ignorer,
+				$elm$parser$Parser$chompIf(
+					$elm$core$Basics$eq(' ')),
+				$elm$parser$Parser$chompWhile(
+					$elm$core$Basics$eq(' '))),
+				$elm$parser$Parser$token('\n'),
+				$elm$parser$Parser$chompUntilEndOr('\n')
+			]));
+	var lines = A2(
+		$elm$parser$Parser$loop,
+		_List_Nil,
+		function (lst) {
+			return $elm$parser$Parser$oneOf(
+				_List_fromArray(
+					[
+						A2(
+						$elm$parser$Parser$map,
+						$elm$core$Basics$always(
+							$elm$parser$Parser$Done(
+								$elm$core$List$reverse(lst))),
+						$elm$parser$Parser$end),
+						A2(
+						$elm$parser$Parser$map,
+						function (v) {
+							return $elm$parser$Parser$Loop(
+								A2($elm$core$List$cons, v, lst));
+						},
+						A2($author$project$ObjParser$parseFloats, $author$project$ObjParser$Vertex, 'v')),
+						A2(
+						$elm$parser$Parser$map,
+						function (v) {
+							return $elm$parser$Parser$Loop(
+								A2($elm$core$List$cons, v, lst));
+						},
+						A2($author$project$ObjParser$parseFloats, $author$project$ObjParser$VertexNormal, 'vn')),
+						A2(
+						$elm$parser$Parser$map,
+						function (v) {
+							return $elm$parser$Parser$Loop(
+								A2($elm$core$List$cons, v, lst));
+						},
+						A2($author$project$ObjParser$parseFace, $author$project$ObjParser$Face, 'f')),
+						A2(
+						$elm$parser$Parser$map,
+						$elm$core$Basics$always(
+							$elm$parser$Parser$Loop(lst)),
+						junk)
+					]));
+		});
+	return lines;
+}();
+var $elm$parser$Parser$DeadEnd = F3(
+	function (row, col, problem) {
+		return {a7: col, bu: problem, bC: row};
+	});
+var $elm$parser$Parser$problemToDeadEnd = function (p) {
+	return A3($elm$parser$Parser$DeadEnd, p.bC, p.a7, p.bu);
+};
+var $elm$parser$Parser$Advanced$bagToList = F2(
+	function (bag, list) {
+		bagToList:
+		while (true) {
+			switch (bag.$) {
+				case 0:
+					return list;
+				case 1:
+					var bag1 = bag.a;
+					var x = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2($elm$core$List$cons, x, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+				default:
+					var bag1 = bag.a;
+					var bag2 = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2($elm$parser$Parser$Advanced$bagToList, bag2, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$run = F2(
+	function (_v0, src) {
+		var parse = _v0;
+		var _v1 = parse(
+			{a7: 1, c: _List_Nil, d: 1, b: 0, bC: 1, a: src});
+		if (!_v1.$) {
+			var value = _v1.b;
+			return $elm$core$Result$Ok(value);
+		} else {
+			var bag = _v1.b;
+			return $elm$core$Result$Err(
+				A2($elm$parser$Parser$Advanced$bagToList, bag, _List_Nil));
+		}
+	});
+var $elm$parser$Parser$run = F2(
+	function (parser, source) {
+		var _v0 = A2($elm$parser$Parser$Advanced$run, parser, source);
+		if (!_v0.$) {
+			var a = _v0.a;
+			return $elm$core$Result$Ok(a);
+		} else {
+			var problems = _v0.a;
+			return $elm$core$Result$Err(
+				A2($elm$core$List$map, $elm$parser$Parser$problemToDeadEnd, problems));
+		}
+	});
+var $author$project$ObjParser$parse = $elm$parser$Parser$run($author$project$ObjParser$parseObj);
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (!result.$) {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var $author$project$RayTracerChallenge$objParse = A2(
+	$elm$core$Basics$composeR,
+	$author$project$ObjParser$parse,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Result$withDefault(_List_Nil),
+		$author$project$RayTracerChallenge$objToAssembly));
+var $author$project$RayTracerDsl$objParse = $author$project$RayTracerChallenge$objParse;
+var $author$project$Main$objTeapot = '\n    #\n    # object Teapot001\n    #\n\n    v  7.0000 0.0000 12.0000\n    v  4.9700 -4.9700 12.0000\n    v  4.9811 -4.9811 12.4922\n    v  7.0156 0.0000 12.4922\n    v  5.3250 -5.3250 12.0000\n    v  7.5000 0.0000 12.0000\n    v  0.0000 -7.0000 12.0000\n    v  0.0000 -7.0156 12.4922\n    v  0.0000 -7.5000 12.0000\n    v  -5.1387 -4.9700 12.0000\n    v  -5.0022 -4.9811 12.4922\n    v  -5.3250 -5.3250 12.0000\n    v  -7.0000 0.0000 12.0000\n    v  -7.0156 0.0000 12.4922\n    v  -7.5000 0.0000 12.0000\n    v  -4.9700 4.9700 12.0000\n    v  -4.9811 4.9811 12.4922\n    v  -5.3250 5.3250 12.0000\n    v  0.0000 7.0000 12.0000\n    v  0.0000 7.0156 12.4922\n    v  0.0000 7.5000 12.0000\n    v  4.9700 4.9700 12.0000\n    v  4.9811 4.9811 12.4922\n    v  5.3250 5.3250 12.0000\n    v  6.5453 -6.5453 8.1094\n    v  9.2188 0.0000 8.1094\n    v  7.1000 -7.1000 4.5000\n    v  10.0000 0.0000 4.5000\n    v  0.0000 -9.2188 8.1094\n    v  0.0000 -10.0000 4.5000\n    v  -6.5453 -6.5453 8.1094\n    v  -7.1000 -7.1000 4.5000\n    v  -9.2188 0.0000 8.1094\n    v  -10.0000 0.0000 4.5000\n    v  -6.5453 6.5453 8.1094\n    v  -7.1000 7.1000 4.5000\n    v  0.0000 9.2188 8.1094\n    v  0.0000 10.0000 4.5000\n    v  6.5453 6.5453 8.1094\n    v  7.1000 7.1000 4.5000\n    v  6.2125 -6.2125 1.9219\n    v  8.7500 0.0000 1.9219\n    v  5.3250 -5.3250 0.7500\n    v  7.5000 0.0000 0.7500\n    v  0.0000 -8.7500 1.9219\n    v  0.0000 -7.5000 0.7500\n    v  -6.2125 -6.2125 1.9219\n    v  -5.3250 -5.3250 0.7500\n    v  -8.7500 0.0000 1.9219\n    v  -7.5000 0.0000 0.7500\n    v  -6.2125 6.2125 1.9219\n    v  -5.3250 5.3250 0.7500\n    v  0.0000 8.7500 1.9219\n    v  0.0000 7.5000 0.7500\n    v  6.2125 6.2125 1.9219\n    v  5.3250 5.3250 0.7500\n    v  4.5595 -4.5595 0.2344\n    v  6.4219 0.0000 0.2344\n    v  0.0000 0.0000 0.0000\n    v  0.0000 -6.4219 0.2344\n    v  -4.5595 -4.5595 0.2344\n    v  -6.4219 0.0000 0.2344\n    v  -4.5595 4.5595 0.2344\n    v  0.0000 6.4219 0.2344\n    v  4.5595 4.5595 0.2344\n    v  -8.0000 0.0000 10.1250\n    v  -7.7500 -1.1250 10.6875\n    v  -12.5938 -1.1250 10.4766\n    v  -12.0625 0.0000 9.9844\n    v  -14.2500 -1.1250 9.0000\n    v  -13.5000 0.0000 9.0000\n    v  -7.5000 0.0000 11.2500\n    v  -13.1250 0.0000 10.9688\n    v  -15.0000 0.0000 9.0000\n    v  -7.7500 1.1250 10.6875\n    v  -12.5938 1.1250 10.4766\n    v  -14.2500 1.1250 9.0000\n    v  -13.1719 -1.1250 6.2695\n    v  -12.6875 0.0000 6.7500\n    v  -9.7500 -1.1250 3.7500\n    v  -13.6563 0.0000 5.7891\n    v  -9.5000 0.0000 3.0000\n    v  -13.1719 1.1250 6.2695\n    v  -9.7500 1.1250 3.7500\n    v  8.5000 0.0000 7.1250\n    v  8.5000 -2.4750 5.0625\n    v  12.6875 -1.7062 8.1094\n    v  11.9375 0.0000 9.0000\n    v  15.0000 -0.9375 12.0000\n    v  13.5000 0.0000 12.0000\n    v  8.5000 0.0000 3.0000\n    v  13.4375 0.0000 7.2187\n    v  16.5000 0.0000 12.0000\n    v  8.5000 2.4750 5.0625\n    v  12.6875 1.7062 8.1094\n    v  15.0000 0.9375 12.0000\n    v  15.6328 -0.7500 12.3340\n    v  14.1250 0.0000 12.2813\n    v  15.0000 -0.5625 12.0000\n    v  14.0000 0.0000 12.0000\n    v  17.1406 0.0000 12.3867\n    v  16.0000 0.0000 12.0000\n    v  15.6328 0.7500 12.3340\n    v  15.0000 0.5625 12.0000\n    v  1.1552 -1.1552 14.9063\n    v  1.6250 0.0000 14.9063\n    v  0.0000 0.0000 15.7500\n    v  0.7100 -0.7100 13.5000\n    v  1.0000 0.0000 13.5000\n    v  0.0000 -1.6250 14.9063\n    v  0.0000 -1.0000 13.5000\n    v  -1.1552 -1.1552 14.9063\n    v  -0.7100 -0.7100 13.5000\n    v  -1.6250 0.0000 14.9063\n    v  -1.0000 0.0000 13.5000\n    v  -1.1552 1.1552 14.9063\n    v  -0.7100 0.7100 13.5000\n    v  0.0000 1.6250 14.9063\n    v  0.0000 1.0000 13.5000\n    v  1.1552 1.1552 14.9063\n    v  0.7100 0.7100 13.5000\n    v  2.9288 -2.9288 12.7500\n    v  4.1250 0.0000 12.7500\n    v  4.6150 -4.6150 12.0000\n    v  6.5000 0.0000 12.0000\n    v  0.0000 -4.1250 12.7500\n    v  0.0000 -6.5000 12.0000\n    v  -2.9288 -2.9288 12.7500\n    v  -4.6150 -4.6150 12.0000\n    v  -4.1250 0.0000 12.7500\n    v  -6.5000 0.0000 12.0000\n    v  -2.9288 2.9288 12.7500\n    v  -4.6150 4.6150 12.0000\n    v  0.0000 4.1250 12.7500\n    v  0.0000 6.5000 12.0000\n    v  2.9288 2.9288 12.7500\n    v  4.6150 4.6150 12.0000\n    # 137 vertices\n\n    vn -0.9995 -0.0000 0.0317\n    vn -0.7067 0.7067 0.0319\n    vn -0.0966 0.0966 0.9906\n    vn -0.1416 0.0000 0.9899\n    vn 0.5936 -0.5936 0.5435\n    vn 0.8400 0.0000 0.5425\n    vn -0.0010 0.9996 0.0283\n    vn -0.0008 0.1421 0.9899\n    vn 0.0000 -0.8400 0.5425\n    vn 0.7268 0.6636 -0.1773\n    vn 0.0816 0.2165 0.9729\n    vn -0.5949 -0.5971 0.5381\n    vn 0.9994 -0.0148 0.0317\n    vn 0.1496 -0.0134 0.9886\n    vn -0.8403 0.0004 0.5422\n    vn 0.7067 -0.7067 0.0319\n    vn 0.0966 -0.0966 0.9906\n    vn -0.5936 0.5936 0.5435\n    vn 0.0000 -0.9995 0.0317\n    vn -0.0000 -0.1416 0.9899\n    vn -0.0000 0.8400 0.5425\n    vn -0.7067 -0.7067 0.0319\n    vn -0.0966 -0.0966 0.9906\n    vn 0.5936 0.5936 0.5435\n    vn 0.6738 -0.6738 0.3034\n    vn 0.9532 -0.0000 0.3025\n    vn 0.7028 -0.7028 -0.1107\n    vn 0.9939 -0.0000 -0.1105\n    vn -0.0000 -0.9532 0.3025\n    vn -0.0000 -0.9939 -0.1105\n    vn -0.6738 -0.6738 0.3034\n    vn -0.7028 -0.7028 -0.1107\n    vn -0.9532 0.0000 0.3025\n    vn -0.9939 0.0000 -0.1105\n    vn -0.6738 0.6738 0.3034\n    vn -0.7028 0.7028 -0.1107\n    vn 0.0000 0.9532 0.3025\n    vn 0.0000 0.9939 -0.1105\n    vn 0.6738 0.6738 0.3034\n    vn 0.7028 0.7028 -0.1107\n    vn 0.5792 -0.5792 -0.5735\n    vn 0.8198 0.0000 -0.5726\n    vn 0.4157 -0.4157 -0.8089\n    vn 0.5888 -0.0000 -0.8083\n    vn 0.0000 -0.8198 -0.5726\n    vn -0.0000 -0.5888 -0.8083\n    vn -0.5792 -0.5792 -0.5735\n    vn -0.4157 -0.4157 -0.8089\n    vn -0.8198 -0.0000 -0.5726\n    vn -0.5888 0.0000 -0.8083\n    vn -0.5792 0.5792 -0.5735\n    vn -0.4157 0.4157 -0.8089\n    vn -0.0000 0.8198 -0.5726\n    vn 0.0000 0.5888 -0.8083\n    vn 0.5792 0.5792 -0.5735\n    vn 0.4157 0.4157 -0.8089\n    vn 0.2016 -0.2016 -0.9585\n    vn 0.2850 -0.0000 -0.9585\n    vn 0.0000 -0.0000 -1.0000\n    vn -0.0000 -0.2850 -0.9585\n    vn -0.2016 -0.2016 -0.9585\n    vn -0.2850 0.0000 -0.9585\n    vn -0.2016 0.2016 -0.9585\n    vn 0.0000 0.2850 -0.9585\n    vn 0.2016 0.2016 -0.9585\n    vn 0.0384 0.0031 -0.9993\n    vn -0.0182 -0.9619 0.2727\n    vn -0.0190 -0.9786 0.2047\n    vn 0.2817 0.0145 -0.9594\n    vn -0.2938 -0.9475 0.1264\n    vn 0.9324 0.0422 -0.3590\n    vn -0.0473 -0.0015 0.9989\n    vn -0.4420 -0.0127 0.8969\n    vn -0.9859 -0.0106 0.1669\n    vn -0.0177 0.9631 0.2685\n    vn -0.0097 0.9839 0.1786\n    vn -0.2735 0.9565 0.1013\n    vn -0.1217 -0.9875 -0.0998\n    vn 0.8176 0.0138 0.5756\n    vn -0.3352 -0.7946 -0.5061\n    vn 0.6216 0.0294 0.7828\n    vn -0.7747 -0.0079 -0.6322\n    vn -0.5711 -0.0076 -0.8208\n    vn -0.1055 0.9904 -0.0889\n    vn -0.3009 0.8200 -0.4869\n    vn -0.4862 0.0074 0.8738\n    vn 0.3271 -0.9145 -0.2382\n    vn 0.1595 -0.9869 0.0246\n    vn -0.6970 -0.0236 0.7167\n    vn -0.0062 -0.9245 0.3812\n    vn -0.7234 -0.0562 0.6881\n    vn 0.6538 0.0025 -0.7567\n    vn 0.7677 0.0173 -0.6406\n    vn 0.6465 0.0447 -0.7616\n    vn 0.3456 0.9087 -0.2343\n    vn 0.1845 0.9828 0.0081\n    vn 0.0506 0.9476 0.3154\n    vn 0.2319 -0.5821 0.7793\n    vn 0.0415 -0.0704 0.9967\n    vn 0.3158 0.9477 -0.0454\n    vn 0.9011 -0.0135 -0.4334\n    vn 0.9533 0.0371 0.2997\n    vn -0.3219 0.0032 0.9468\n    vn 0.3655 0.5783 0.7294\n    vn 0.3394 -0.9333 -0.1174\n    vn 0.6774 -0.6773 0.2871\n    vn 0.9576 -0.0001 0.2882\n    vn 0.0000 0.0000 1.0000\n    vn 0.5955 -0.5952 0.5396\n    vn 0.8436 -0.0002 0.5370\n    vn -0.0001 -0.9576 0.2882\n    vn -0.0002 -0.8436 0.5370\n    vn -0.6773 -0.6774 0.2871\n    vn -0.5952 -0.5955 0.5396\n    vn -0.9576 0.0001 0.2882\n    vn -0.8436 0.0002 0.5370\n    vn -0.6774 0.6773 0.2871\n    vn -0.5955 0.5952 0.5396\n    vn 0.0001 0.9576 0.2882\n    vn 0.0002 0.8436 0.5370\n    vn 0.6773 0.6774 0.2871\n    vn 0.5952 0.5955 0.5396\n    vn 0.1942 -0.1942 0.9616\n    vn 0.2754 0.0000 0.9613\n    vn 0.2121 -0.2121 0.9539\n    vn 0.3011 0.0000 0.9536\n    vn 0.0000 -0.2754 0.9613\n    vn 0.0000 -0.3011 0.9536\n    vn -0.1942 -0.1942 0.9616\n    vn -0.2121 -0.2121 0.9539\n    vn -0.2754 -0.0000 0.9613\n    vn -0.3011 -0.0000 0.9536\n    vn -0.1942 0.1942 0.9616\n    vn -0.2121 0.2121 0.9539\n    vn -0.0000 0.2754 0.9613\n    vn -0.0000 0.3011 0.9536\n    vn 0.1942 0.1942 0.9616\n    vn 0.2121 0.2121 0.9539\n    # 138 vertex normals\n\n    g Teapot001\n    f 1/1/1 2/2/2 3/3/3 4/4/4\n    f 4/4/4 3/3/3 5/5/5 6/6/6\n    f 2/2/2 7/7/7 8/8/8 3/3/3\n    f 3/3/3 8/8/8 9/9/9 5/5/5\n    f 7/7/7 10/10/10 11/11/11 8/8/8\n    f 8/8/8 11/11/11 12/12/12 9/9/9\n    f 10/10/10 13/13/13 14/14/14 11/11/11\n    f 11/11/11 14/14/14 15/15/15 12/12/12\n    f 13/1/13 16/2/16 17/3/17 14/4/14\n    f 14/4/14 17/3/17 18/5/18 15/6/15\n    f 16/2/16 19/7/19 20/8/20 17/3/17\n    f 17/3/17 20/8/20 21/9/21 18/5/18\n    f 19/7/19 22/10/22 23/11/23 20/8/20\n    f 20/8/20 23/11/23 24/12/24 21/9/21\n    f 22/10/22 1/13/1 4/14/4 23/11/23\n    f 23/11/23 4/14/4 6/15/6 24/12/24\n    f 6/6/6 5/5/5 25/16/25 26/17/26\n    f 26/17/26 25/16/25 27/18/27 28/19/28\n    f 5/5/5 9/9/9 29/20/29 25/16/25\n    f 25/16/25 29/20/29 30/21/30 27/18/27\n    f 9/9/9 12/12/12 31/22/31 29/20/29\n    f 29/20/29 31/22/31 32/23/32 30/21/30\n    f 12/12/12 15/15/15 33/24/33 31/22/31\n    f 31/22/31 33/24/33 34/25/34 32/23/32\n    f 15/6/15 18/5/18 35/16/35 33/17/33\n    f 33/17/33 35/16/35 36/18/36 34/19/34\n    f 18/5/18 21/9/21 37/20/37 35/16/35\n    f 35/16/35 37/20/37 38/21/38 36/18/36\n    f 21/9/21 24/12/24 39/22/39 37/20/37\n    f 37/20/37 39/22/39 40/23/40 38/21/38\n    f 24/12/24 6/15/6 26/24/26 39/22/39\n    f 39/22/39 26/24/26 28/25/28 40/23/40\n    f 28/19/28 27/18/27 41/26/41 42/27/42\n    f 42/27/42 41/26/41 43/28/43 44/29/44\n    f 27/18/27 30/21/30 45/30/45 41/26/41\n    f 41/26/41 45/30/45 46/31/46 43/28/43\n    f 30/21/30 32/23/32 47/32/47 45/30/45\n    f 45/30/45 47/32/47 48/33/48 46/31/46\n    f 32/23/32 34/25/34 49/34/49 47/32/47\n    f 47/32/47 49/34/49 50/35/50 48/33/48\n    f 34/19/34 36/18/36 51/26/51 49/27/49\n    f 49/27/49 51/26/51 52/28/52 50/29/50\n    f 36/18/36 38/21/38 53/30/53 51/26/51\n    f 51/26/51 53/30/53 54/31/54 52/28/52\n    f 38/21/38 40/23/40 55/32/55 53/30/53\n    f 53/30/53 55/32/55 56/33/56 54/31/54\n    f 40/23/40 28/25/28 42/34/42 55/32/55\n    f 55/32/55 42/34/42 44/35/44 56/33/56\n    f 44/29/44 43/28/43 57/36/57 58/37/58\n    f 58/37/58 57/36/57 59/38/59\n    f 43/28/43 46/31/46 60/39/60 57/36/57\n    f 57/36/57 60/39/60 59/40/59\n    f 46/31/46 48/33/48 61/41/61 60/39/60\n    f 60/39/60 61/41/61 59/42/59\n    f 48/33/48 50/35/50 62/43/62 61/41/61\n    f 61/41/61 62/43/62 59/44/59\n    f 50/29/50 52/28/52 63/36/63 62/37/62\n    f 62/37/62 63/36/63 59/38/59\n    f 52/28/52 54/31/54 64/39/64 63/36/63\n    f 63/36/63 64/39/64 59/40/59\n    f 54/31/54 56/33/56 65/41/65 64/39/64\n    f 64/39/64 65/41/65 59/42/59\n    f 56/33/56 44/35/44 58/43/58 65/41/65\n    f 65/41/65 58/43/58 59/44/59\n    f 66/21/66 67/45/67 68/46/68 69/47/69\n    f 69/47/69 68/46/68 70/48/70 71/49/71\n    f 67/45/67 72/23/72 73/50/73 68/46/68\n    f 68/46/68 73/50/73 74/51/74 70/48/70\n    f 72/23/72 75/52/75 76/53/76 73/50/73\n    f 73/50/73 76/53/76 77/54/77 74/51/74\n    f 75/52/75 66/25/66 69/55/69 76/53/76\n    f 76/53/76 69/55/69 71/56/71 77/54/77\n    f 71/49/71 70/48/70 78/57/78 79/58/79\n    f 79/58/79 78/57/78 80/59/80 34/40/81\n    f 70/48/70 74/51/74 81/60/82 78/57/78\n    f 78/57/78 81/60/82 82/42/83 80/59/80\n    f 74/51/74 77/54/77 83/61/84 81/60/82\n    f 81/60/82 83/61/84 84/62/85 82/42/83\n    f 77/54/77 71/56/71 79/63/79 83/61/84\n    f 83/61/84 79/63/79 34/44/81 84/62/85\n    f 85/42/86 86/59/87 87/64/88 88/65/89\n    f 88/65/89 87/64/88 89/66/90 90/67/91\n    f 86/59/87 91/40/92 92/68/93 87/64/88\n    f 87/64/88 92/68/93 93/69/94 89/66/90\n    f 91/44/92 94/62/95 95/70/96 92/71/93\n    f 92/71/93 95/70/96 96/72/97 93/73/94\n    f 94/62/95 85/42/86 88/65/89 95/70/96\n    f 95/70/96 88/65/89 90/67/91 96/72/97\n    f 90/67/91 89/66/90 97/74/98 98/75/99\n    f 98/75/99 97/74/98 99/45/100 100/23/101\n    f 89/66/90 93/69/94 101/76/102 97/74/98\n    f 97/74/98 101/76/102 102/21/103 99/45/100\n    f 93/73/94 96/72/97 103/77/104 101/78/102\n    f 101/78/102 103/77/104 104/52/105 102/25/103\n    f 96/72/97 90/67/91 98/75/99 103/77/104\n    f 103/77/104 98/75/99 100/23/101 104/52/105\n    f 105/48/106 106/49/107 107/21/108\n    f 106/49/107 105/48/106 108/59/109 109/40/110\n    f 110/51/111 105/48/106 107/45/108\n    f 105/48/106 110/51/111 111/42/112 108/59/109\n    f 112/54/113 110/51/111 107/23/108\n    f 110/51/111 112/54/113 113/62/114 111/42/112\n    f 114/56/115 112/54/113 107/52/108\n    f 112/54/113 114/56/115 115/44/116 113/62/114\n    f 116/48/117 114/49/115 107/21/108\n    f 114/49/115 116/48/117 117/59/118 115/40/116\n    f 118/51/119 116/48/117 107/45/108\n    f 116/48/117 118/51/119 119/42/120 117/59/118\n    f 120/54/121 118/51/119 107/23/108\n    f 118/51/119 120/54/121 121/62/122 119/42/120\n    f 106/56/107 120/54/121 107/52/108\n    f 120/54/121 106/56/107 109/44/110 121/62/122\n    f 109/21/110 108/45/109 122/48/123 123/49/124\n    f 123/49/124 122/48/123 124/59/125 125/40/126\n    f 108/45/109 111/23/112 126/51/127 122/48/123\n    f 122/48/123 126/51/127 127/42/128 124/59/125\n    f 111/23/112 113/52/114 128/54/129 126/51/127\n    f 126/51/127 128/54/129 129/62/130 127/42/128\n    f 113/52/114 115/25/116 130/56/131 128/54/129\n    f 128/54/129 130/56/131 131/44/132 129/62/130\n    f 115/21/116 117/45/118 132/48/133 130/49/131\n    f 130/49/131 132/48/133 133/59/134 131/40/132\n    f 117/45/118 119/23/120 134/51/135 132/48/133\n    f 132/48/133 134/51/135 135/42/136 133/59/134\n    f 119/23/120 121/52/122 136/54/137 134/51/135\n    f 134/51/135 136/54/137 137/62/138 135/42/136\n    f 121/52/122 109/25/110 123/56/124 136/54/137\n    f 136/54/137 123/56/124 125/44/126 137/62/138\n    # 112 polygons - 16 triangles\n    ';
+var $author$project$Geometry$matNewRotateY = function (radians) {
+	return $author$project$Geometry$Matrix(
+		$elm$core$Basics$cos(radians))(0)(
+		$elm$core$Basics$sin(radians))(0)(0)(1)(0)(0)(
+		-$elm$core$Basics$sin(radians))(0)(
+		$elm$core$Basics$cos(radians))(0)(0)(0)(0)(1);
+};
+var $author$project$RayTracerDsl$rotateY = function (a) {
+	return $author$project$RayTracerDsl$applyTransform(
+		$author$project$Geometry$matNewRotateY(a));
+};
+var $author$project$Main$teapot = A2(
+	$author$project$RayTracerDsl$material,
+	{
+		r: 0.3,
+		k: $elm$core$Basics$always(
+			{j: 0.5, l: 1, n: 1}),
+		s: 0.8,
+		u: 0.1,
+		C: 1.5,
+		D: true,
+		P: 100,
+		E: 0.3,
+		A: 0
+	},
+	A4(
+		$author$project$RayTracerDsl$translate,
+		0,
+		-12,
+		0,
+		A4(
+			$author$project$RayTracerDsl$scale,
+			1.5,
+			1.5,
+			1.5,
+			A2(
+				$author$project$RayTracerDsl$rotateY,
+				((-5) * $elm$core$Basics$pi) / 16,
+				A2(
+					$author$project$RayTracerDsl$rotateX,
+					(-$elm$core$Basics$pi) / 2,
+					$author$project$RayTracerDsl$objParse($author$project$Main$objTeapot))))));
 var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
 		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
@@ -6390,9 +9253,9 @@ var $elm$core$Array$map = F2(
 var $elm$core$Basics$round = _Basics_round;
 var $author$project$RayTracerChallenge$imageToBitmap = function (image) {
 	var colourToTuple = function (_v0) {
-		var red = _v0.T;
-		var green = _v0.N;
-		var blue = _v0.K;
+		var red = _v0.n;
+		var green = _v0.l;
+		var blue = _v0.j;
 		var convert = A2(
 			$elm$core$Basics$composeR,
 			A2($elm$core$Basics$clamp, 0, 1),
@@ -6406,112 +9269,111 @@ var $author$project$RayTracerChallenge$imageToBitmap = function (image) {
 			convert(blue));
 	};
 	return {
-		bX: $elm$core$Array$toList(
-			A2($elm$core$Array$map, colourToTuple, image.bX)),
-		b$: image.b$,
-		cf: image.cf
+		bP: $elm$core$Array$toList(
+			A2($elm$core$Array$map, colourToTuple, image.bP)),
+		bT: image.bT,
+		b9: image.b9
 	};
 };
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $elm$json$Json$Encode$int = _Json_wrap;
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(0),
-				entries));
-	});
-var $elm$json$Json$Encode$object = function (pairs) {
-	return _Json_wrap(
-		A3(
-			$elm$core$List$foldl,
-			F2(
-				function (_v0, obj) {
-					var k = _v0.a;
-					var v = _v0.b;
-					return A3(_Json_addField, k, v, obj);
-				}),
-			_Json_emptyObject(0),
-			pairs));
+var $author$project$RayTracerDsl$toBitmap = $author$project$RayTracerChallenge$imageToBitmap;
+var $author$project$Main$viewer = function (assembly) {
+	return {
+		au: assembly,
+		ax: $author$project$RayTracerDsl$camera(
+			{
+				aK: $elm$core$Basics$pi / 5,
+				aL: 320,
+				aM: 320,
+				aO: 6,
+				aZ: A3($author$project$RayTracerDsl$point, 50, 20, -60),
+				a_: A3($author$project$RayTracerDsl$point, 0, 0, 0),
+				a0: A3($author$project$RayTracerDsl$vector, 0, 1, 0)
+			}),
+		aN: _List_fromArray(
+			[
+				$author$project$RayTracerDsl$light(
+				A3($author$project$RayTracerDsl$point, -25, 25, -60))
+			])
+	};
 };
-var $author$project$Main$render = _Platform_outgoingPort(
-	'render',
-	function ($) {
-		return $elm$json$Json$Encode$object(
+var $author$project$Main$main = function () {
+	var view = F2(
+		function (id, example) {
+			return $author$project$Main$cmdRender(
+				{
+					ba: id,
+					bi: $author$project$RayTracerDsl$toBitmap(
+						$author$project$RayTracerDsl$render(example))
+				});
+		});
+	var canvas = function (id) {
+		return A2(
+			$elm$html$Html$canvas,
 			_List_fromArray(
 				[
-					_Utils_Tuple2(
-					'elementId',
-					$elm$json$Json$Encode$string($.bj)),
-					_Utils_Tuple2(
-					'image',
-					function ($) {
-						return $elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'data',
-									$elm$json$Json$Encode$list(
-										function ($) {
-											var a = $.a;
-											var b = $.b;
-											var c = $.c;
-											return A2(
-												$elm$json$Json$Encode$list,
-												$elm$core$Basics$identity,
-												_List_fromArray(
-													[
-														$elm$json$Json$Encode$int(a),
-														$elm$json$Json$Encode$int(b),
-														$elm$json$Json$Encode$int(c)
-													]));
-										})($.bX)),
-									_Utils_Tuple2(
-									'height',
-									$elm$json$Json$Encode$int($.b$)),
-									_Utils_Tuple2(
-									'width',
-									$elm$json$Json$Encode$int($.cf))
-								]));
-					}($.br))
-				]));
-	});
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $author$project$Main$main = $elm$browser$Browser$element(
-	{
-		b2: function (_v0) {
-			return _Utils_Tuple2(
-				0,
-				$author$project$Main$render(
-					{
-						bj: 'canvas',
-						br: $author$project$RayTracerChallenge$imageToBitmap(
-							$author$project$RayTracerChallenge$imageRender($author$project$Main$cover))
-					}));
-		},
-		cb: function (_v1) {
-			return $elm$core$Platform$Sub$none;
-		},
-		cd: F2(
-			function (_v2, _v3) {
-				return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
-			}),
-		ce: function (_v4) {
-			return A2(
-				$elm$html$Html$canvas,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$id('canvas'),
-						A2($elm$html$Html$Attributes$style, 'border', '1px solid black')
-					]),
-				_List_Nil);
-		}
-	});
+					$elm$html$Html$Attributes$id(id),
+					A2($elm$html$Html$Attributes$style, 'border', '1px solid black')
+				]),
+			_List_Nil);
+	};
+	return $elm$browser$Browser$element(
+		{
+			bW: function (_v0) {
+				return _Utils_Tuple2(
+					0,
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								A2(
+								view,
+								'canvas0',
+								$author$project$Main$viewer($author$project$Main$basic)),
+								A2(
+								view,
+								'canvas1',
+								$author$project$Main$viewer($author$project$Main$brick)),
+								A2(
+								view,
+								'canvas2',
+								$author$project$Main$viewer($author$project$Main$teapot)),
+								A2(
+								view,
+								'canvas3',
+								$author$project$Main$viewer($author$project$Main$csg)),
+								A2(
+								view,
+								'canvas4',
+								$author$project$Main$viewer($author$project$Main$hex)),
+								A2(
+								view,
+								'canvas5',
+								$author$project$Main$viewer($author$project$Main$csghex)),
+								A2(view, 'canvas6', $author$project$Main$cover),
+								A2(view, 'canvas7', $author$project$Main$infobubble),
+								A2(
+								view,
+								'canvas8',
+								$author$project$Main$viewer($author$project$Main$primitives))
+							])));
+			},
+			b5: function (_v1) {
+				return $elm$core$Platform$Sub$none;
+			},
+			b7: F2(
+				function (_v2, _v3) {
+					return _Utils_Tuple2(0, $elm$core$Platform$Cmd$none);
+				}),
+			b8: function (_v4) {
+				return A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					A2(
+						$elm$core$List$map,
+						canvas,
+						_List_fromArray(
+							['canvas0', 'canvas1', 'canvas2', 'canvas3', 'canvas4', 'canvas5', 'canvas6', 'canvas7', 'canvas8'])));
+			}
+		});
+}();
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));
