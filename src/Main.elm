@@ -1,12 +1,13 @@
-port module Main exposing (cover, main)
+port module Main exposing (main)
 
 import Browser
+import Geometry as G
 import Html
 import Html.Attributes
-import RayTracerChallenge as RT
+import RayTracerDsl exposing (..)
 
 
-port render :
+port cmdRender :
     { elementId : String
     , image :
         { width : Int
@@ -19,359 +20,326 @@ port render :
 
 main : Program () () ()
 main =
+    let
+        canvas id =
+            Html.canvas
+                [ Html.Attributes.id id
+                , Html.Attributes.style "border" "1px solid black"
+                ]
+                []
+
+        view id example =
+            cmdRender
+                { elementId = id
+                , image = render example |> toBitmap
+                }
+    in
     Browser.element
         { init =
             \_ ->
                 ( ()
-                , render
-                    { elementId = "canvas"
-                    , image = RT.imageToBitmap (RT.imageRender cover)
-                    }
+                , Cmd.batch
+                    [ view "canvas0" (viewer basic)
+                    , view "canvas1" (viewer brick)
+                    , view "canvas2" (viewer teapot)
+                    , view "canvas3" (viewer csg)
+                    , view "canvas4" (viewer hex)
+                    , view "canvas5" (viewer csghex)
+                    , view "canvas6" cover
+                    , view "canvas7" infobubble
+                    , view "canvas8" (viewer primitives)
+                    ]
                 )
         , view =
             \_ ->
-                Html.canvas
-                    [ Html.Attributes.id "canvas"
-                    , Html.Attributes.style "border" "1px solid black"
-                    ]
-                    []
+                Html.div []
+                    (List.map canvas
+                        [ "canvas0"
+                        , "canvas1"
+                        , "canvas2"
+                        , "canvas3"
+                        , "canvas4"
+                        , "canvas5"
+                        , "canvas6"
+                        , "canvas7"
+                        , "canvas8"
+                        ]
+                    )
         , update = \_ _ -> ( (), Cmd.none )
         , subscriptions = \_ -> Sub.none
         }
 
 
-infobubble =
-    let
-        ( light, world ) =
-            ( RT.defaultLight, RT.defaultWorld )
-
-        ( cylinder, material ) =
-            ( RT.defaultCylinder, RT.defaultMaterial )
-
-        ( sphere, plane ) =
-            ( RT.defaultSphere, RT.defaultPlane )
-
-        materialPerson =
-            { material
-                | colour = always { red = 0.9, green = 0.7, blue = 0.8 }
-                , ambient = 0.2
-                , diffuse = 0.6
-                , specular = 0
-                , shininess = 300
-                , reflective = 0
-                , transparency = 0
-                , refractiveIndex = 1
-            }
-    in
-    { world =
-        world
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.5 0.5 0.5)
-                                |> RT.transformMul (RT.transformTranslate 0 5 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.6 0.8 0.4)
-                                |> RT.transformMul (RT.transformTranslate 0 2.5 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.6 0.8 0.4)
-                                |> RT.transformMul (RT.transformTranslate 0 3.5 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.25 0.25 0.1)
-                                |> RT.transformMul (RT.transformTranslate 2 4 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.25 0.25 0.1)
-                                |> RT.transformMul (RT.transformTranslate -2 4 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.3 0.15 0.6)
-                                |> RT.transformMul (RT.transformTranslate -1.6 -0.25 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.3 0.15 0.6)
-                                |> RT.transformMul (RT.transformTranslate 1.6 -0.25 0)
-                            )
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { cylinder
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.1 2.5 0.1)
-                                |> RT.transformMul (RT.transformTranslate 0 2.5 0)
-                            )
-                    , normalAt = RT.vectorCylinderNormalAt { ymin = 0, ymax = 1, capped = True }
-                    , intersectRay = RT.intersectCylinder { ymin = 0, ymax = 1, capped = True }
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { cylinder
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.1 4 0.1)
-                                |> RT.transformMul (RT.transformRotateZ (pi / 2))
-                                |> RT.transformMul (RT.transformTranslate 2 4 0)
-                            )
-                    , normalAt = RT.vectorCylinderNormalAt { ymin = 0, ymax = 1, capped = True }
-                    , intersectRay = RT.intersectCylinder { ymin = 0, ymax = 1, capped = True }
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { cylinder
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.1 3 0.1)
-                                |> RT.transformMul (RT.transformRotateZ (5 * pi / 6))
-                                |> RT.transformMul (RT.transformTranslate 0 2.5 0)
-                            )
-                    , normalAt = RT.vectorCylinderNormalAt { ymin = 0, ymax = 1, capped = True }
-                    , intersectRay = RT.intersectCylinder { ymin = 0, ymax = 1, capped = True }
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { cylinder
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 0.1 3 0.1)
-                                |> RT.transformMul (RT.transformRotateZ (7 * pi / 6))
-                                |> RT.transformMul (RT.transformTranslate 0 2.5 0)
-                            )
-                    , normalAt = RT.vectorCylinderNormalAt { ymin = 0, ymax = 1, capped = True }
-                    , intersectRay = RT.intersectCylinder { ymin = 0, ymax = 1, capped = True }
-                    , material = materialPerson
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 4 4 4)
-                                |> RT.transformMul (RT.transformTranslate 0 2.5 0)
-                            )
-                    , material =
-                        { material
-                            | colour = always { red = 0.3, green = 0.3, blue = 0.36 }
-                            , ambient = 0.4
-                            , diffuse = 0.1
-                            , specular = 0
-                            , shininess = 500
-                            , reflective = 0.2
-                            , transparency = 0.9
-                            , refractiveIndex = 1.00025
-                            ,shadow=False
-                        }
-                }
-            |> RT.worldInsertShape
-                { plane
-                  -- floor
-                    | worldToObject = RT.transformInverse (RT.transformTranslate 0 -0.25 0)
-                    , material =
-                        { material
-                            | colour = always RT.colourWhite
-                            , ambient = 0.5
-                            , diffuse = 1
-                            , specular = 0
-                            , shininess = 300
-                            , reflective = 0.4
-                            , transparency = 0
-                            , refractiveIndex = 1
-                        }
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | worldToObject =
-                        RT.transformInverse
-                            (RT.transformIdentity
-                                |> RT.transformMul (RT.transformScale 1 1 1)
-                                |> RT.transformMul (RT.transformTranslate 0 10 10)
-                            )
-                    , material =
-                        { material
-                            | colour = always { red = 0.5, green = 0.5, blue = 1 }
-                            , ambient = 0
-                            , diffuse = 1
-                            , specular = 0
-                            , shininess = 300
-                            , reflective = 0.1
-                            , transparency = 0
-                            , refractiveIndex = 1
-                        }
-                }
-    , lights =
-        [ { light
-            | colour = RT.colourWhite
-            , point = RT.Point { x = -20, y = 30, z = -60 }
-          }
-        ]
+viewer assembly =
+    { assembly = assembly
+    , lights = [ light (point -25 25 -60) ]
     , camera =
-        RT.makeCamera
-            { viewFrom = RT.Point { x = 50, y = 6, z = -60 }
-            , viewTo = RT.Point { x = 0, y = 2, z = 0 }
-            , viewUp = RT.Vector { dx = 0, dy = 1, dz = 0 }
-            , imageWidth = 640
-            , imageHeight = 480
-            , fieldOfView = pi / 15
+        camera
+            { viewFrom = point 50 20 -60
+            , viewTo = point 0 0 0
+            , viewUp = vector 0 1 0
+            , imageWidth = 320
+            , imageHeight = 320
+            , fieldOfView = pi / 5
             , maxRecursion = 6
             }
     }
 
 
-hex =
-    let
-        ( light, world ) =
-            ( RT.defaultLight, RT.defaultWorld )
-
-        ( cylinder, material ) =
-            ( RT.defaultCylinder, RT.defaultMaterial )
-
-        sphere =
-            RT.defaultSphere
-
-        hexagon =
-            let
-                mat =
-                    { material
-                        | colour = always { red = 0.9, green = 0.5, blue = 0.5 }
-                        , ambient = 0.2
-                        , diffuse = 0.8
-                        , specular = 0.8
-                        , shininess = 300
-                        , reflective = 0.7
-                        , transparency = 0.5
-                        , refractiveIndex = 1.3
-                    }
-
-                assembly =
-                    RT.Assembly RT.transformIdentity
-                        [ RT.Primitive { sphere | material = mat }
-                        , RT.Primitive
-                            { cylinder
-                                | worldToObject = RT.transformInverse (RT.transformScale 0.99 1 0.99)
-                                , normalAt = RT.vectorCylinderNormalAt { ymin = -0.01, ymax = 4.01, capped = False }
-                                , intersectRay = RT.intersectCylinder { ymin = -0.01, ymax = 4.01, capped = False }
-                                , material = mat
-                            }
-                        ]
-            in
-            RT.Assembly (RT.transformInverse (RT.transformScale 0.25 0.25 0.25))
-                (List.map
-                    (\i ->
-                        RT.Assembly
-                            (RT.transformInverse (RT.transformTranslate 3.5 -2 0 |> RT.transformMul (RT.transformRotateZ (toFloat i * pi / 3))))
-                            [ assembly ]
-                    )
-                    (List.range 0 5)
-                )
-    in
-    { world =
-        world
-            |> RT.worldInsertAssembly (RT.Assembly (RT.transformTranslate 0 0 0) [ hexagon ])
-    , lights =
-        [ { light
-            | colour = RT.colourWhite
-            , point = RT.Point { x = -20, y = 30, z = -60 }
-          }
+brick =
+    union
+        [ (cube |> scale 31.8 9.6 15.8) |> subtract (cube |> scale 29.4 9.6 13.4 |> translate 0 -1 0)
+        , (triples [ -12, -4, 4, 12 ] [ -0.5 ] [ 6.7, -6.7 ] ++ triples [ -14.7, 14.7 ] [ -0.5 ] [ 4, -4 ])
+            |> List.map (\( x, y, z ) -> cube |> scale 0.6 8.6 0.6 |> translate x y z)
+            |> group
+        , triples [ -8, 0, 8 ] [ -0.5 ] [ 0 ]
+            |> List.map (\( x, y, z ) -> cylinder |> scale 6.51 8.6 6.51 |> subtract (cylinder |> scale 4.8 8.8 4.8) |> translate x y z)
+            |> group
+        , triples [ -12, -4, 4, 12 ] [ 5.6 ] [ 4, -4 ]
+            |> List.map (\( x, y, z ) -> cylinder |> scale 4.8 2 4.8 |> translate x y z)
+            |> group
         ]
+        |> subtract
+            (triples [ -12, -4, 4, 12 ] [ 4.6 ] [ 4, -4 ]
+                |> List.map (\( x, y, z ) -> cylinder |> scale 2.6 2 2.6 |> translate x y z)
+                |> group
+            )
+        |> material
+            { colour = always { red = 0.3, green = 0.3, blue = 0.32 }
+            , ambient = 0.3
+            , diffuse = 0.8
+            , specular = 0.3
+            , shininess = 100
+            , reflective = 0.6
+            , transparency = 0.8
+            , refractiveIndex = 1.5
+            , shadow = False
+            }
+
+
+basic =
+    sphere |> scale 20 20 20
+
+
+primitives =
+    [ plane
+    , cube |> translate -1 0.5 -1
+    , sphere |> translate 2 0.5 -3.5
+    , cylinder |> translate 1 0.5 0
+    , cone |> translate 3 0.5 -1.5
+    , triangle |> rotateX (-pi / 4) |> translate -3 1 2
+    ]
+        |> group
+        |> scale 10 10 10
+
+
+teapot =
+    objParse objTeapot
+        |> rotateX (-pi / 2)
+        |> rotateY (-5 * pi / 16)
+        |> scale 1.5 1.5 1.5
+        |> translate 0 -12 0
+        |> material
+            { colour = always { red = 1, green = 1, blue = 0.5 }
+            , ambient = 0.3
+            , diffuse = 0.8
+            , specular = 0.3
+            , shininess = 100
+            , reflective = 0.1
+            , transparency = 0
+            , refractiveIndex = 1.5
+            , shadow = True
+            }
+
+
+csg =
+    let
+        mat =
+            { colour = always { red = 1, green = 1, blue = 0.5 }
+            , ambient = 0.3
+            , diffuse = 0.8
+            , specular = 0.3
+            , shininess = 100
+            , reflective = 0
+            , transparency = 0
+            , refractiveIndex = 1
+            , shadow = False
+            }
+    in
+    (cube |> material mat)
+        |> subtract
+            (sphere
+                |> translate 0.4 0.4 -0.4
+                |> material { mat | colour = always { red = 0.5, green = 1, blue = 1 } }
+            )
+        |> scale 30 30 30
+
+
+infobubble =
+    let
+        mat =
+            { colour = always { red = 0.9, green = 0.7, blue = 0.8 }
+            , ambient = 0.2
+            , diffuse = 0.6
+            , specular = 0
+            , shininess = 300
+            , reflective = 0
+            , transparency = 0
+            , refractiveIndex = 1
+            , shadow = True
+            }
+
+        cylinder =
+            primitive (G.Cylinder { ymin = 0, ymax = 1, capped = True })
+    in
+    { assembly =
+        [ plane
+            |> translate 0 -0.25 0
+            |> material
+                { mat
+                    | colour = always { red = 1, green = 1, blue = 1 }
+                    , ambient = 0.5
+                    , diffuse = 1
+                    , reflective = 0.4
+                }
+        , sphere
+            |> scale 2 2 2
+            |> translate 0 10 10
+            |> material
+                { mat
+                    | colour = always { red = 0.5, green = 0.5, blue = 1 }
+                    , ambient = 0
+                    , diffuse = 1
+                    , reflective = 0.1
+                }
+        , sphere
+            |> scale 8 8 8
+            |> translate 0 2.5 0
+            |> material
+                { mat
+                    | colour = always { red = 0.3, green = 0.3, blue = 0.36 }
+                    , ambient = 0.4
+                    , diffuse = 0.1
+                    , reflective = 0.2
+                    , transparency = 0.9
+                    , refractiveIndex = 1.00025
+                    , shadow = False
+                }
+        , group
+            [ sphere |> scale 100 100 100 |> translate 0 500 0
+            , cylinder |> scale 10 25 10 |> translate 0 425 0
+            , cylinder |> scale 10 400 10 |> rotateZ (pi / 2) |> translate 200 400 0
+            , sphere |> scale 120 160 80 |> translate 0 250 0
+            , sphere |> scale 120 160 80 |> translate 0 350 0
+            , sphere |> scale 60 30 120 |> translate 160 -25 0
+            , sphere |> scale 50 50 20 |> translate 200 400 0
+            , cylinder |> scale 10 300 10 |> rotateZ (7 * pi / 6) |> translate 0 250 0
+            , sphere |> scale 60 30 120 |> translate 160 -25 0 |> scale -1 1 1
+            , sphere |> scale 50 50 20 |> translate 200 400 0 |> scale -1 1 1
+            , cylinder |> scale 10 300 10 |> rotateZ (7 * pi / 6) |> translate 0 250 0 |> scale -1 1 1
+            ]
+            |> scale 0.01 0.01 0.01
+            |> material mat
+        ]
+            |> group
+    , lights = [ light (point -20 30 -60) ]
     , camera =
-        RT.makeCamera
-            { viewFrom = RT.Point { x = 0, y = 0, z = -60 }
-            , viewTo = RT.Point { x = 0, y = 0, z = 0 }
-            , viewUp = RT.Vector { dx = 0, dy = 1, dz = 0 }
-            , imageWidth = 200
-            , imageHeight = 200
-            , fieldOfView = pi / 60
+        camera
+            { viewFrom = point 50 5.5 -60
+            , viewTo = point 3 4 0
+            , viewUp = vector 0 1 0
+            , imageWidth = 160 * 2
+            , imageHeight = 160 * 2
+            , fieldOfView = pi / 15
             , maxRecursion = 3
             }
     }
 
 
-teapot =
-    let
-        ( light, world ) =
-            ( RT.defaultLight, RT.defaultWorld )
-
-        me =
-            { x = 0, y = 60, z = 60 }
-    in
-    { world =
-        world
-            |> RT.worldInsertAssembly (RT.objToAssembly (RT.objParserVertices objTeapot))
-    , lights =
-        [ { light
-            | colour = RT.colourWhite
-            , point = RT.Point me
-          }
-        ]
-    , camera =
-        RT.makeCamera
-            { viewFrom = RT.Point me
-            , viewTo = RT.Point { x = 0, y = 0, z = 7 }
-            , viewUp = RT.Vector { dx = 0, dy = 0, dz = 1 }
-            , imageWidth = 301
-            , imageHeight = 301
-            , fieldOfView = pi / 9
-            , maxRecursion = 1
+hex =
+    List.range 0 5
+        |> List.map (\i -> (pi / 3) * toFloat i)
+        |> List.map
+            (\i ->
+                [ sphere |> scale 2 2 2
+                , primitive (G.Cylinder { ymin = 0, ymax = 4, capped = False })
+                ]
+                    |> group
+                    |> translate 3.5 -2 0
+                    |> rotateZ i
+            )
+        |> group
+        |> rotateX (pi / 3)
+        |> scale 5 5 5
+        |> material
+            { colour = always { red = 0.9, green = 0.5, blue = 0.5 }
+            , ambient = 0.2
+            , diffuse = 0.8
+            , specular = 0.8
+            , shininess = 300
+            , reflective = 0.7
+            , transparency = 0.5
+            , refractiveIndex = 1.3
+            , shadow = False
             }
-    }
 
 
-cover =
+csghex =
+    let
+        oldmat =
+            { colour = always { red = 0.25, green = 0.1, blue = 0.1 }
+            , ambient = 0.6
+            , diffuse = 0.9
+            , specular = 0.99
+            , shininess = 300
+            , reflective = 0
+            , transparency = 0.999
+            , refractiveIndex = 1
+            , shadow = False
+            }
+    in
+    List.range 0 5
+        |> List.map (\i -> toFloat i * pi / 3)
+        |> List.map
+            (\i ->
+                [ primitive (G.Cylinder { ymin = 0, ymax = 4, capped = True })
+                , sphere |> scale 2 2 2
+                ]
+                    |> union
+                    |> translate 3.5 -2 0
+                    |> rotateZ i
+            )
+        |> union
+        |> rotateX (pi / 3)
+        |> scale 5 5 5
+        |> material
+            { colour = always { red = 0.9, green = 0.5, blue = 0.5 }
+            , ambient = 0.2
+            , diffuse = 0.8
+            , specular = 0.8
+            , shininess = 300
+            , reflective = 0.7
+            , transparency = 0.5
+            , refractiveIndex = 1.3
+            , shadow = False
+            }
+
+
+
+{--------- COVER ---------}
+
+
+coverAssembly =
     let
         white =
-            { colour = always RT.colourWhite
-            , ambient = 0.1
+            { colour = always { red = 1, green = 1, blue = 1 }
             , diffuse = 0.7
+            , ambient = 0.1
             , specular = 0.0
-            , shininess = 200
             , reflective = 0.1
+            , shininess = 200
             , transparency = 0
-            , refractiveIndex = 1
+            , refractiveIndex = 1.5
             , shadow = True
             }
 
@@ -380,94 +348,72 @@ cover =
             , { white | colour = always { red = 0.941, green = 0.322, blue = 0.388 } }
             , { white | colour = always { red = 0.373, green = 0.404, blue = 0.55 } }
             )
-
-        ( large, medium, small ) =
-            ( [ RT.transformTranslate 1 -1 1
-              , RT.transformScale 0.5 0.5 0.5
-              , RT.transformScale 3.5 3.5 3.5
-              ]
-            , [ RT.transformTranslate 1 -1 1
-              , RT.transformScale 0.5 0.5 0.5
-              , RT.transformScale 3 3 3
-              ]
-            , [ RT.transformTranslate 1 -1 1
-              , RT.transformScale 0.5 0.5 0.5
-              , RT.transformScale 2 2 2
-              ]
-            )
-
-        ( cube, plane, sphere ) =
-            ( RT.defaultCube, RT.defaultPlane, RT.defaultSphere )
-
-        xform lst =
-            RT.transformInverse (List.foldl RT.transformMul RT.transformIdentity lst)
-
-        addCube material size x y z =
-            RT.worldInsertShape
-                { cube
-                    | material = material
-                    , worldToObject = xform (List.append size [ RT.transformTranslate x y z ])
-                }
     in
-    { world =
-        { nextId = 1
-        , objects = []
-        }
-            |> RT.worldInsertShape
-                { plane
-                    | material =
-                        { white | ambient = 1, diffuse = 0, reflective = 0 }
-                    , worldToObject =
-                        xform
-                            [ RT.transformRotateX (pi / 2)
-                            , RT.transformTranslate 0 0 500
-                            ]
-                }
-            |> RT.worldInsertShape
-                { sphere
-                    | material =
-                        { purple
-                            | ambient = 0
-                            , diffuse = 0.2
-                            , specular = 1
-                            , reflective = 0.7
-                            , transparency = 0.7
-                            , refractiveIndex = 1.5
-                        }
-                    , worldToObject = xform large
-                }
-            |> addCube white medium 4 0 0
-            |> addCube blue large 8.5 1.5 -0.5
-            |> addCube red large 0 0 4
-            |> addCube white small 4 0 4
-            |> addCube purple medium 7.5 0.5 4
-            |> addCube white medium -0.25 0.25 8
-            |> addCube blue large 4 1 7.5
-            |> addCube red medium 10 2 7.5
-            |> addCube white small 8 2 12
-            |> addCube white small 20 1 9
-            |> addCube blue large -0.5 -5 0.25
-            |> addCube red large 4 -4 0
-            |> addCube white large 8.5 -4 0
-            |> addCube white large 0 -4 4
-            |> addCube purple large -0.5 -4.5 8
-            |> addCube white large 0 -8 4
-            |> addCube white large -0.5 -8.5 8
+    [ plane
+        |> rotateX (pi / 2)
+        |> translate 0 0 500
+        |> material { white | ambient = 1, diffuse = 0, reflective = 0 }
+    , sphere
+        |> scale 14 14 14
+        |> translate 2 34 2
+        |> material
+            { purple
+                | diffuse = 0.2
+                , ambient = 0
+                , specular = 1
+                , reflective = 0.7
+                , transparency = 0.7
+            }
+    , group
+        [ cube |> scale 8 8 8 |> translate 15 37 15
+        , cube |> scale 8 8 8 |> translate 31 45 47
+        , cube |> scale 8 8 8 |> translate 79 41 35
+        , cube |> scale 12 12 12 |> translate 17 35 1
+        , cube |> scale 12 12 12 |> translate 0 36 33
+        , cube |> scale 14 14 14 |> translate 36 18 2
+        , cube |> scale 14 14 14 |> translate 2 18 18
+        , cube |> scale 14 14 14 |> translate 2 2 18
+        , cube |> scale 14 14 14 |> translate 0 0 34
+        ]
+        |> material white
+    , group
+        [ cube |> scale 14 14 14 |> translate 36 40 0
+        , cube |> scale 14 14 14 |> translate 18 38 32
+        , cube |> scale 14 14 14 |> translate 0 14 3
+        ]
+        |> material blue
+    , group
+        [ cube |> scale 12 12 12 |> translate 41 43 31
+        , cube |> scale 14 14 14 |> translate 18 18 2
+        , cube |> scale 14 14 14 |> translate 2 34 18
+        ]
+        |> material red
+    , group
+        [ cube |> scale 12 12 12 |> translate 31 37 17
+        , cube |> scale 14 14 14 |> translate 0 16 34
+        ]
+        |> material purple
+    ]
+        |> group
+        |> scale 0.25 0.25 0.25
+        |> translate 1.25 -10.25 1.25
+
+
+cover =
+    { assembly = coverAssembly
     , lights =
-        [ { colour = RT.colourWhite
-          , point = RT.Point { x = 50, y = 100, z = -50 }
-          }
+        [ light (point 50 100 -50)
         , { colour = { red = 0.2, green = 0.2, blue = 0.2 }
-          , point = RT.Point { x = -400, y = 50, z = -10 }
+          , point = point -400 50 -10
           }
         ]
     , camera =
-        RT.makeCamera
-            { viewFrom = RT.Point { x = -6, y = 6, z = -10 }
-            , viewTo = RT.Point { x = 6, y = 0, z = 6 }
-            , viewUp = RT.Vector { dx = -0.45, dy = 1, dz = 0 }
-            , imageWidth = 600
-            , imageHeight = 600
+        camera
+            { viewFrom = point -6 6 -10
+            , viewTo = point 6 0 6
+            , viewUp = vector -0.45 1 0
+            , imageWidth = 320
+            , imageHeight = 320
             , fieldOfView = pi / 4
             , maxRecursion = 5
             }
