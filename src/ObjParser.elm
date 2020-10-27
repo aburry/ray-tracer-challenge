@@ -1,4 +1,7 @@
-module ObjParser exposing (ObjLine(..), parse)
+module ObjParser exposing
+    ( ObjLine(..)
+    , parse
+    )
 
 import Parser exposing (..)
 
