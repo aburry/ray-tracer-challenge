@@ -18,7 +18,7 @@
     });
 
     // port
-    app.ports.render.subscribe(function (message) {
+    app.ports.cmdRender.subscribe(function (message) {
         var canvas = document.getElementById(message.elementId);
         canvas.width = message.image.width;
         canvas.height = message.image.height;
