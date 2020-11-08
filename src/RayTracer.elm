@@ -1,15 +1,11 @@
 module RayTracer exposing
-    ( Assembly(..)
-    , Camera
+    ( Camera
     , CameraConfig
-    , CsgOp(..)
     , Light
-    , Material
     , Scene
     , applyMaterial
     , colourBlack
     , colourWhite
-    , compileAssembly
     , defaultMaterial
     , defaultTriangle
     , imageRender
@@ -23,6 +19,7 @@ module RayTracer exposing
     )
 
 import Array
+import Assembly exposing (Assembly(..), Colour, ColourFn, CsgOp(..), Shape)
 import Geometry as G
 import ObjParser
 
@@ -153,19 +150,6 @@ type alias CameraConfig =
     }
 
 
-type Assembly
-    = Group (List G.Matrix) (List Assembly)
-    | CSG (List G.Matrix) CsgOp Assembly Assembly
-    | Primitive (List G.Matrix) Shape
-    | Empty
-
-
-type CsgOp
-    = Union
-    | Intersect
-    | Difference
-
-
 type alias Image =
     { width : Int
     , height : Int
@@ -185,34 +169,9 @@ newLight point =
     }
 
 
-type alias ColourFn =
-    G.Point -> Colour
-
-
-type alias Material =
-    { colour : ColourFn
-    , ambient : Float
-    , diffuse : Float
-    , specular : Float
-    , shininess : Float
-    , reflective : Float
-    , transparency : Float
-    , refractiveIndex : Float
-    , shadow : Bool
-    }
-
-
 type alias Pixel =
     { x : Int
     , y : Int
-    }
-
-
-type alias Shape =
-    { id : Int
-    , geometry : G.Shape
-    , material : Material
-    , worldToObject : G.Matrix
     }
 
 
@@ -255,14 +214,14 @@ applyMaterial material assembly =
         Empty ->
             Empty
 
-        Primitive transform shape ->
-            Primitive transform { shape | material = material }
+        Primitive aabb transform shape ->
+            Primitive aabb transform { shape | material = material }
 
-        CSG transform op left right ->
-            CSG transform op (applyMaterial material left) (applyMaterial material right)
+        CSG aabb transform op left right ->
+            CSG aabb transform op (applyMaterial material left) (applyMaterial material right)
 
-        Group transform list ->
-            Group transform (List.map (applyMaterial material) list)
+        Group aabb transform list ->
+            Group aabb transform (List.map (applyMaterial material) list)
 
 
 defaultTriangle : Shape
@@ -282,8 +241,6 @@ defaultTriangle =
 
 
 
-
-
 {--FUNCTIONS -----------------------------------------------------------------}
 {- Scene creation -}
 
@@ -291,139 +248,11 @@ defaultTriangle =
 insertAssembly world assembly =
     -- todo simplify this and let the compiler sort it out
     case world of
-        Group [] list ->
-            Group [] (assembly :: list)
+        Group aabb [] list ->
+            Group aabb [] (assembly :: list)
 
         _ ->
-            Group [] [ assembly, world ]
-
-
-compileAssembly : Assembly -> Assembly
-compileAssembly assembly =
-    let
-        label ass =
-            let
-                assemblyAssignIds nextId assembly2 =
-                    let
-                        setId asss ( w, a ) =
-                            assemblyAssignIds w asss |> (\( ww, aa ) -> ( ww, aa :: a ))
-                    in
-                    case assembly2 of
-                        Primitive t shape ->
-                            ( nextId + 1, Primitive t { shape | id = nextId } )
-
-                        Group transform list ->
-                            List.foldr setId ( nextId, [] ) list
-                                |> (\( w, a ) -> ( w, Group transform a ))
-
-                        CSG t op left right ->
-                            List.foldr setId ( nextId, [] ) [ left, right ]
-                                |> (\( w, a ) ->
-                                        case a of
-                                            [ l, r ] ->
-                                                ( w, CSG t op l r )
-
-                                            _ ->
-                                                ( nextId, Empty )
-                                   )
-
-                        Empty ->
-                            ( nextId, Empty )
-
-                ( _, numberedAssembly ) =
-                    assemblyAssignIds 1 ass
-            in
-            numberedAssembly
-
-        simplify ass =
-            -- todo add cases for identity transform
-            -- todo add a flatten simplification
-            --   eg. Assembly [t] [Assembly [] [a]] == Assembly [t] [a]
-            case ass of
-                Group _ [] ->
-                    Empty
-
-                Group transform2 [ Group transform1 list ] ->
-                    Group (transform1 ++ transform2) list
-
-                Group transform2 [ Primitive transform1 shape ] ->
-                    Primitive (transform1 ++ transform2) shape
-
-                Group transform2 [ CSG transform1 op l r ] ->
-                    CSG (transform1 ++ transform2) op l r
-
-                Group transform list ->
-                    let
-                        l =
-                            list
-                                |> List.map simplify
-                                |> List.filter ((/=) Empty)
-                    in
-                    Group transform l
-
-                CSG transform Union l Empty ->
-                    Group transform [ l ]
-
-                CSG transform Union Empty r ->
-                    Group transform [ r ]
-
-                CSG _ Intersect _ Empty ->
-                    Empty
-
-                CSG _ Intersect Empty _ ->
-                    Empty
-
-                CSG transform Difference l Empty ->
-                    Group transform [ l ]
-
-                CSG _ Difference Empty _ ->
-                    Empty
-
-                CSG transform op l r ->
-                    CSG transform op (simplify l) (simplify r)
-
-                Primitive transform shape ->
-                    Primitive transform shape
-
-                Empty ->
-                    Empty
-
-        memoize second ass =
-            case ass of
-                Empty ->
-                    Empty
-
-                Primitive transform shape ->
-                    Primitive transform
-                        { shape
-                            | worldToObject =
-                                (transform ++ second)
-                                    --|> List.reverse
-                                    |> G.matListProduct
-                                    |> G.matInvert
-                        }
-
-                CSG transform op l r ->
-                    CSG transform op (memoize (transform ++ second) l) (memoize (transform ++ second) r)
-
-                Group transform list ->
-                    Group transform (List.map (memoize (transform ++ second)) list)
-    in
-    assembly
-    -- todo
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> simplify
-        |> memoize []
-        |> label
+            Group G.aabbAll [] [ assembly, world ]
 
 
 
@@ -488,10 +317,10 @@ objToAssembly objList =
                             ( Nothing, Nothing )
 
                 triangle config =
-                    Just (Primitive [] { defaultTriangle | geometry = G.shpNewShape (G.Triangle config) })
+                    Just (Primitive G.aabbAll [] { defaultTriangle | geometry = G.shpNewShape (G.Triangle config) })
 
                 smoothTriangle config =
-                    Just (Primitive [] { defaultTriangle | geometry = G.shpNewShape (G.SmoothTriangle config) })
+                    Just (Primitive G.aabbAll [] { defaultTriangle | geometry = G.shpNewShape (G.SmoothTriangle config) })
 
                 faceToShape : List (List (Maybe Int)) -> Maybe Assembly
                 faceToShape x =
@@ -523,7 +352,7 @@ objToAssembly objList =
                                 _ ->
                                     Nothing
                     in
-                    makeAllTri (List.map faceVertex x) |> Maybe.map (Group [])
+                    makeAllTri (List.map faceVertex x) |> Maybe.map (Group G.aabbAll [])
             in
             case obj of
                 ObjParser.Face lst ->
@@ -535,19 +364,12 @@ objToAssembly objList =
     objList
         |> List.map faceToTriangle
         |> List.filter ((/=) Nothing)
-        |> List.map (Maybe.withDefault (Primitive [] defaultTriangle))
-        |> Group []
+        |> List.map (Maybe.withDefault (Primitive G.aabbAll [] defaultTriangle))
+        |> Group G.aabbAll []
 
 
 
 {- Colours and Patterns -}
-
-
-type alias Colour =
-    { red : Float
-    , green : Float
-    , blue : Float
-    }
 
 
 colourBlack =
@@ -628,7 +450,7 @@ imageRender { assembly, lights, camera } =
             index
                 |> pixelAtIndex
                 |> cameraRayForPixel camera
-                |> colourAtRay (compileAssembly assembly) lights camera.maxRecursion
+                |> colourAtRay (Assembly.asmCompile assembly) lights camera.maxRecursion
     in
     { width = camera.imageWidth
     , height = camera.imageHeight
@@ -1118,24 +940,33 @@ vectorNormalAt shape point =
 intersectAssembly : Assembly -> G.Ray -> List Intersection
 intersectAssembly assembly ray =
     let
+        intersectGroup aabb =
+            if G.aabbIntersectRay aabb ray then
+                List.concatMap (\i -> intersectAssembly i ray)
+
+            else
+                always []
+
         intersections =
             case assembly of
                 Empty ->
                     []
 
-                Primitive _ shape ->
+                Primitive _ _ shape ->
                     ray
                         |> G.rayTransform shape.worldToObject
                         |> shape.geometry.intersectRay
                         |> List.map (Intersection shape ray)
 
-                Group _ list ->
-                    ray
-                        |> (\r i -> intersectAssembly i r)
-                        |> (\fn -> List.concatMap fn list)
+                Group aabb _ list ->
+                    intersectGroup aabb list
 
-                CSG _ op left right ->
-                    intersectCsg op (intersectAssembly left ray) (intersectAssembly right ray)
+                CSG aabb _ op left right ->
+                    if G.aabbIntersectRay aabb ray then
+                        intersectCsg op (intersectAssembly left ray) (intersectAssembly right ray)
+
+                    else
+                        []
     in
     intersections
         |> List.filter (not << isNaN << .t)
