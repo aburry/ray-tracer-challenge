@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module Main exposing (brick, compiler1, main)
 
 import Browser
 import Geometry as G
@@ -25,6 +25,8 @@ main =
             Html.canvas
                 [ Html.Attributes.id id
                 , Html.Attributes.style "border" "1px solid black"
+                , Html.Attributes.style "height" "320px"
+                , Html.Attributes.style "width" "320px"
                 ]
                 []
 
@@ -39,15 +41,17 @@ main =
             \_ ->
                 ( ()
                 , Cmd.batch
-                    [ view "canvas0" (viewer basic)
-                    , view "canvas1" (viewer brick)
-                    , view "canvas2" (viewer teapot)
-                    , view "canvas3" (viewer csg)
-                    , view "canvas4" (viewer hex)
-                    , view "canvas5" (viewer csghex)
-                    , view "canvas6" cover
-                    , view "canvas7" infobubble
-                    , view "canvas8" (viewer primitives)
+                    [ view "canvas0" (viewer compiler1) -- (viewer basic)
+
+                    {- , view "canvas1" (viewer brick)
+                       , view "canvas2" (viewer teapot)
+                       , view "canvas3" (viewer csg)
+                       , view "canvas4" (viewer hex)
+                       , view "canvas5" (viewer csghex)
+                       , view "canvas6" cover
+                       , view "canvas7" infobubble
+                       , view "canvas8" (viewer primitives)
+                    -}
                     ]
                 )
         , view =
@@ -84,6 +88,44 @@ viewer assembly =
             , maxRecursion = 6
             }
     }
+
+
+compiler1 =
+    let
+        thing1 =
+            union
+                [ sphere |> scale 2 2 2 |> translate 1.5 0 0
+                , sphere |> scale 2 2 2 |> translate -1.5 0 0
+                ]
+
+        thing2 =
+            intersect
+                [ sphere |> scale 2 2 2 |> translate 1.5 0 0
+                , sphere |> scale 2 2 2 |> translate -1.5 0 0
+                ]
+
+        thing3 =
+            (sphere |> scale 2 2 2 |> translate -1.5 0 0)
+                |> subtract
+                    (sphere |> scale 2 2 2 |> translate 1.5 0 0)
+    in
+    [ thing1 |> translate 0 3 0
+    , thing2
+    , thing3 |> translate 0 -3 0
+    ]
+        |> group
+        |> scale 5 5 5
+
+
+lightcycle =
+    [ sphere |> translate -2 0 0 |> scale 1 1 0.3
+    , sphere |> translate 2 0 0
+    , cube |> scale 1.8 1 0.25 |> translate 0 0.5 0
+    , cone |> translate 0 -0.5 0 |> rotateZ (pi / 2)
+    ]
+        |> group
+        |> scale 8 8 8
+        |> translate 0 -10 0
 
 
 brick =
