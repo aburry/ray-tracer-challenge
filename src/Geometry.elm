@@ -2,12 +2,20 @@ module Geometry
     exposing
     -- todo make these types opaque
     -- todo are there any private functions
-    ( Matrix(..)
+    ( BoundingBox(..)
+    , Matrix(..)
     , Point(..)
     , Ray(..)
     , Shape
     , ShapeConfig(..)
     , Vector(..)
+    , aabbAll
+    , aabbIntersectBoundingBox
+    , aabbIntersectRay
+    , aabbNone
+    , aabbTransform
+    , aabbUnionBoundingBox
+    , aabbUnionPoint
     , matInvert
     , matListProduct
     , matNewIdentity
@@ -19,12 +27,14 @@ module Geometry
     , matNewTranslate
     , matProduct
     , matTranspose
+    , pairs
     , pntAlongRay
     , pntNewPoint
     , pntTransform
     , rayNewRay
     , rayTransform
     , shpNewShape
+    , triples
     , vecBetweenPoints
     , vecCross
     , vecDot
@@ -53,6 +63,22 @@ type Ray
 
 type Matrix
     = Matrix Float Float Float Float Float Float Float Float Float Float Float Float Float Float Float Float
+
+
+type BoundingBox
+    = Aabb Point Point
+
+
+
+{- Helpers -}
+
+
+pairs xs ys =
+    List.concatMap (\fn -> List.map fn ys) (List.map Tuple.pair xs)
+
+
+triples xs ys zs =
+    List.concatMap (\( x, y ) -> List.map (\z -> ( x, y, z )) zs) (pairs xs ys)
 
 
 
@@ -86,38 +112,65 @@ type alias Shape =
     { config : ShapeConfig
     , normalAt : Point -> Vector
     , intersectRay : Ray -> List Float
+    , aabb : BoundingBox
     }
 
 
 shpNewShape shapeConfig =
     let
-        newObject normalFn intersectFn =
+        newObject normalFn intersectFn aabb =
             { config = shapeConfig
             , normalAt = normalFn
             , intersectRay = intersectFn
+            , aabb = aabb
             }
     in
     case shapeConfig of
         Sphere ->
-            newObject vectorSphereNormalAt intersectSphere
+            newObject
+                vectorSphereNormalAt
+                intersectSphere
+                (Aabb (Point -1 -1 -1) (Point 1 1 1))
 
         Plane ->
-            newObject vectorPlaneNormalAt intersectPlane
+            newObject
+                vectorPlaneNormalAt
+                intersectPlane
+                (Aabb (Point (-1 / 0) 0 (-1 / 0)) (Point (1 / 0) 0 (1 / 0)))
 
         Cube ->
-            newObject vectorCubeNormalAt intersectCube
+            newObject
+                vectorCubeNormalAt
+                intersectCube
+                (Aabb (Point -1 -1 -1) (Point 1 1 1))
 
         Cylinder config ->
-            newObject (vectorCylinderNormalAt config) (intersectCylinder config)
+            newObject
+                (vectorCylinderNormalAt config)
+                (intersectCylinder config)
+                (Aabb (Point -1 config.ymin -1) (Point 1 config.ymax 1))
 
         Cone config ->
-            newObject (vectorConeNormalAt config) (intersectCone config)
+            let
+                bound =
+                    max (abs config.ymin) (abs config.ymax)
+            in
+            newObject
+                (vectorConeNormalAt config)
+                (intersectCone config)
+                (Aabb (Point -bound config.ymin -bound) (Point bound config.ymax bound))
 
         Triangle config ->
-            newObject (vectorTriangleNormalAt config) (intersectTriangle config)
+            newObject
+                (vectorTriangleNormalAt config)
+                (intersectTriangle config)
+                (aabbNone |> aabbUnionPoint config.a |> aabbUnionPoint config.b |> aabbUnionPoint config.c)
 
         SmoothTriangle config ->
-            newObject (vectorSmoothTriangleNormalAt config) (intersectTriangle config)
+            newObject
+                (vectorSmoothTriangleNormalAt config)
+                (intersectTriangle config)
+                (aabbNone |> aabbUnionPoint config.a |> aabbUnionPoint config.b |> aabbUnionPoint config.c)
 
 
 
@@ -556,8 +609,7 @@ matTranspose (Matrix j11 j12 j13 j14 j21 j22 j23 j24 j31 j32 j33 j34 j41 j42 j43
 
 matListProduct : List Matrix -> Matrix
 matListProduct =
-    -- todo should be foldr, List.foldl (++) "a" ["b","c"] == "cba"
-    List.foldl matProduct matNewIdentity
+    List.foldr matProduct matNewIdentity
 
 
 matProduct : Matrix -> Matrix -> Matrix
@@ -694,3 +746,90 @@ rayNewRay rpoint vector =
 
 rayTransform transform (Ray rpoint vector) =
     Ray (pntTransform transform rpoint) (vecTransform transform vector)
+
+
+
+{- Axis Aligned Bounding Box (AABB) -}
+
+
+aabbNone =
+    Aabb (Point (1 / 0) (1 / 0) (1 / 0)) (Point (-1 / 0) (-1 / 0) (-1 / 0))
+
+
+aabbAll =
+    Aabb (Point (-1 / 0) (-1 / 0) (-1 / 0)) (Point (1 / 0) (1 / 0) (1 / 0))
+
+
+aabbUnionPoint (Point x y z) (Aabb (Point x0 y0 z0) (Point x1 y1 z1)) =
+    Aabb
+        (Point (min x0 x) (min y0 y) (min z0 z))
+        (Point (max x1 x) (max y1 y) (max z1 z))
+
+
+aabbUnionBoundingBox (Aabb (Point x0 y0 z0) (Point x1 y1 z1)) (Aabb (Point x2 y2 z2) (Point x3 y3 z3)) =
+    Aabb
+        (Point (min x0 x2) (min y0 y2) (min z0 z2))
+        (Point (max x1 x3) (max y1 y3) (max z1 z3))
+
+
+aabbIntersectBoundingBox : BoundingBox -> BoundingBox -> BoundingBox
+aabbIntersectBoundingBox (Aabb (Point x0 y0 z0) (Point x1 y1 z1)) (Aabb (Point x2 y2 z2) (Point x3 y3 z3)) =
+    let
+        bound amin amax bmin bmax =
+            if bmin < amin then
+                bound bmin bmax amin amax
+
+            else if amax < bmin then
+                ( 1 / 0, -1 / 0 )
+
+            else if amax <= bmax then
+                ( bmin, amax )
+
+            else
+                ( bmin, bmax )
+
+        ( xmin, xmax ) =
+            bound x0 x1 x2 x3
+
+        ( ymin, ymax ) =
+            bound y0 y1 y2 y3
+
+        ( zmin, zmax ) =
+            bound z0 z1 z2 z3
+    in
+    if List.member (1 / 0) [ xmin, ymin, zmin ] || List.member (-1 / 0) [ xmax, ymax, zmax ] then
+        aabbNone
+
+    else
+        Aabb (Point xmin ymin zmin) (Point xmax ymax zmax)
+
+
+aabbIntersectRay (Aabb (Point x0 y0 z0) (Point x1 y1 z1)) (Ray (Point x y z) (Vector dx dy dz)) =
+    let
+        intersect v dv v0 v1 =
+            if 0 <= dv then
+                ( (v0 - v) / dv, (v1 - v) / dv )
+
+            else
+                ( (v1 - v) / dv, (v0 - v) / dv )
+
+        pick ( a, b ) ( c, d ) =
+            ( max a c, min b d )
+
+        ( tmin, tmax ) =
+            intersect x dx x0 x1
+                |> pick (intersect y dy y0 y1)
+                |> pick (intersect z dz z0 z1)
+    in
+    tmin <= tmax
+
+
+aabbTransform transform (Aabb (Point x1 y1 z1) (Point x2 y2 z2)) =
+    let
+        corners =
+            triples [ x1, x2 ] [ y1, y2 ] [ z1, z2 ]
+
+        newCorners =
+            List.map (\( x, y, z ) -> pntTransform transform (pntNewPoint x y z)) corners
+    in
+    List.foldl aabbUnionPoint aabbNone newCorners
